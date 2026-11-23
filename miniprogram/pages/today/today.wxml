@@ -1,0 +1,210 @@
+<view class="page today-page">
+  <view style="height: {{statusBarHeight}}px;"></view>
+  <view class="page-body today-body">
+    <view class="today-head">
+      <view class="today-topline">
+        <text class="today-date">{{dateText}}</text>
+        <view class="today-topline-side">
+          <view class="pill pill-accent today-streak">
+            <image class="icon" src="/assets/icons/spark-accent.png" mode="aspectFit"></image>
+            <text>连续 {{streak}} 天</text>
+          </view>
+          <button class="icon-btn today-settings" hover-class="btn-hover" aria-label="打开设置" bindtap="goSettings">
+            <image class="icon" src="/assets/icons/settings-ink.png" mode="aspectFit"></image>
+          </button>
+        </view>
+      </view>
+      <view class="title-xl today-greeting">{{greeting}}，{{name}}</view>
+      <text class="today-sub">今天想留下点什么？</text>
+    </view>
+
+    <view class="card today-cap">
+      <view class="today-cap-head">
+        <view class="today-cap-head-main">
+          <text class="today-cap-lead">{{capacityLead}}</text>
+          <text class="today-cap-sub">{{capacitySub}}</text>
+        </view>
+        <view class="chip chip-sm today-status {{over ? 'today-status-over' : 'today-status-safe'}}">
+          <text>{{capacityStatusLabel}}</text>
+        </view>
+      </view>
+
+      <view class="progress today-cap-bar {{over ? 'is-over' : ''}}">
+        <view class="progress-fill progress-fill--safe today-cap-fill" style="width: {{safePct}};"></view>
+        <view wx:if="{{over}}" class="today-cap-over" style="width: {{overPct}};"></view>
+      </view>
+
+      <view class="today-cap-scale">
+        <text>0h</text>
+        <text>容量 {{capacityHours}}h</text>
+        <text>{{plannedLabel}}</text>
+      </view>
+
+      <view class="today-cap-note {{over ? 'is-over' : 'is-safe'}}">{{capacityNote}}</view>
+
+      <view class="today-cap-actions">
+        <button class="btn btn-sm {{trimCount > 0 ? 'btn-primary' : 'btn-ghost'}}" disabled="{{trimCount === 0}}" hover-class="btn-hover" bindtap="onTrim">{{trimLabel}}</button>
+        <button class="btn btn-ghost btn-sm today-replan" hover-class="btn-hover" bindtap="goPlan">
+          <image class="icon" src="/assets/icons/refresh-ink.png" mode="aspectFit"></image>
+          重新规划
+        </button>
+      </view>
+    </view>
+
+    <view class="today-section">
+      <view class="section-label">
+        <text>今日三件事</text>
+        <text wx:if="{{mits.length > 0}}" class="section-label__meta">{{mitDoneCount}} / {{mits.length}} 完成</text>
+      </view>
+
+      <view wx:if="{{mits.length === 0}}" class="empty today-empty">
+        <text class="empty-title">还没挑出今天的三件事</text>
+        <text class="empty-text">三个就够。把最想推进的放在前面，剩下的交给时间轴。</text>
+        <button class="btn btn-ghost" hover-class="btn-hover" bindtap="goPlan">安排三件事</button>
+      </view>
+
+      <view wx:else class="today-mit-list">
+        <view wx:for="{{mits}}" wx:key="id" class="today-mit {{item.done ? 'is-done' : ''}} {{item.current ? 'is-current' : ''}}">
+          <button class="today-mit-check" hover-class="btn-hover" data-id="{{item.id}}" bindtap="onToggleMit" aria-label="{{item.done ? '标记为未完成' : '完成这件事'}}">
+            <view class="today-check-dot">
+              <image wx:if="{{item.done}}" class="today-check-icon" src="/assets/icons/check-cream.png" mode="aspectFit"></image>
+            </view>
+          </button>
+          <view class="today-mit-body">
+            <text class="today-mit-title">{{item.title}}</text>
+            <text class="today-mit-meta">{{item.metaText}}</text>
+          </view>
+          <view wx:if="{{item.current}}" class="pill pill-accent today-mit-live">
+            <text>进行中</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{showNowSection}}" class="today-section">
+      <view class="section-label">
+        <text>{{nowSectionTitle}}</text>
+        <text wx:if="{{nowRangeText}}" class="section-label__meta">{{nowRangeText}}</text>
+      </view>
+
+      <view wx:if="{{hasFocus}}" class="today-now is-focus">
+        <text class="today-now-kicker">专注计时中</text>
+        <text class="today-now-title">{{focusTitle}}</text>
+        <text class="today-now-meta">{{focusMeta}}</text>
+        <view class="today-now-actions">
+          <button class="btn btn-accent" hover-class="btn-hover" bindtap="goFocus">
+            <image class="icon" src="/assets/icons/play-cream.png" mode="aspectFit"></image>
+            专注中 · 继续
+          </button>
+        </view>
+      </view>
+
+      <view wx:elif="{{currentBlock}}" class="today-now {{currentBlock.isTask ? 'is-current' : ''}}">
+        <text class="today-now-kicker">{{currentBlock.kicker}}</text>
+        <text class="today-now-title">{{currentBlock.title}}</text>
+        <text class="today-now-meta">{{currentBlock.currentMeta}}</text>
+
+        <view wx:if="{{currentBlock.isTask}}" class="today-now-actions">
+          <button class="btn btn-primary" disabled="{{currentBlock.done}}" hover-class="btn-hover" data-id="{{currentBlock.id}}" bindtap="onStartBlock">
+            <image class="icon" src="/assets/icons/play-cream.png" mode="aspectFit"></image>
+            {{currentBlock.done ? '这一块已完成' : '开始专注'}}
+          </button>
+          <text class="today-now-side">余 {{currentBlock.remainingLabel}}</text>
+        </view>
+
+        <block wx:else>
+          <text class="today-now-note">{{currentBlock.restCopy}}</text>
+          <view wx:if="{{nextBlock}}" class="today-next">
+            <view class="today-next-main">
+              <text class="today-next-label">下一块</text>
+              <text class="today-next-title">{{nextBlock.title}}</text>
+            </view>
+            <text class="today-next-time">{{nextBlock.startLabel}}</text>
+          </view>
+        </block>
+      </view>
+
+      <view wx:elif="{{nextBlock}}" class="today-now">
+        <text class="today-now-kicker">下一块</text>
+        <text class="today-now-title">{{nextBlock.title}}</text>
+        <text class="today-now-meta">{{nextBlock.nextMeta}}</text>
+        <view wx:if="{{nextBlock.isTask && !nextBlock.done}}" class="today-now-actions">
+          <button class="btn btn-primary" hover-class="btn-hover" data-id="{{nextBlock.id}}" bindtap="onStartBlock">
+            <image class="icon" src="/assets/icons/play-cream.png" mode="aspectFit"></image>
+            现在开始
+          </button>
+        </view>
+        <text wx:elif="{{nextBlock.done}}" class="today-now-note">这一块已经完成了，不用再等它。</text>
+        <text wx:else class="today-now-note">到点再开始，现在先留给自己。</text>
+      </view>
+
+      <view wx:else class="today-now">
+        <text class="today-now-kicker">今天</text>
+        <text class="today-now-title">时间块走完了</text>
+        <text class="today-now-meta">没做完的，留到明天也没关系。</text>
+      </view>
+    </view>
+
+    <view class="today-section today-timeline-section">
+      <view class="section-label">
+        <text>时间轴</text>
+        <text class="section-label__meta">{{dayRangeLabel}}</text>
+      </view>
+
+      <view wx:if="{{timelineItems.length === 0}}" class="empty today-empty">
+        <text class="empty-title">今天还没有时间块</text>
+        <text class="empty-text">{{timelineEmptyText}}</text>
+        <button class="btn btn-primary" hover-class="btn-hover" bindtap="goPlan">开始今日规划</button>
+      </view>
+
+      <block wx:else>
+        <view class="today-tl" style="height: {{timelineHeight}}rpx;">
+          <view wx:for="{{timelineHours}}" wx:key="label" class="today-tl-hour" style="top: {{item.topRpx}}rpx;">
+            <text class="today-tl-hour-label">{{item.label}}</text>
+          </view>
+
+          <block wx:for="{{timelineItems}}" wx:key="id">
+            <button wx:if="{{item.kind === 'task'}}" class="{{item.blockClass}}" style="top: {{item.topRpx}}rpx; height: {{item.heightRpx}}rpx;" disabled="{{item.done}}" hover-class="btn-hover" data-id="{{item.id}}" bindtap="onStartBlock" aria-label="{{item.title}}，{{item.timeLabel}}">
+              <view class="today-tl-head">
+                <text class="today-tl-title">{{item.title}}</text>
+                <view wx:if="{{item.isOptional}}" class="today-tl-tag">
+                  <text>可选</text>
+                </view>
+                <view wx:if="{{item.isFocusing}}" class="today-tl-tag is-live">
+                  <text>专注</text>
+                </view>
+                <view wx:elif="{{item.isCurrent}}" class="today-tl-tag is-live">
+                  <text>现在</text>
+                </view>
+              </view>
+              <text class="today-tl-meta">{{item.metaText}}</text>
+            </button>
+
+            <view wx:else class="{{item.blockClass}}" style="top: {{item.topRpx}}rpx; height: {{item.heightRpx}}rpx;">
+              <view class="today-tl-head">
+                <text class="today-tl-title">{{item.title}}</text>
+                <view wx:if="{{item.isOptional}}" class="today-tl-tag">
+                  <text>可选</text>
+                </view>
+                <view wx:if="{{item.isCurrent}}" class="today-tl-tag is-live">
+                  <text>现在</text>
+                </view>
+              </view>
+              <text class="today-tl-meta">{{item.metaText}}</text>
+            </view>
+          </block>
+
+          <view wx:if="{{showNowLine}}" class="today-tl-now" style="top: {{nowTopRpx}}rpx;">
+            <view class="today-tl-now-dot"></view>
+            <text class="today-tl-now-tag">现在 {{nowClock}}</text>
+          </view>
+        </view>
+
+        <button class="today-add-block" hover-class="btn-hover" bindtap="goPlan">
+          <image class="icon-sm" src="/assets/icons/plus-ink.png" mode="aspectFit"></image>
+          添加时间块
+        </button>
+      </block>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,113 @@
+<view class="page stats-page">
+  <view class="status-bar" style="height: {{statusBarHeight}}px"></view>
+  <view class="page-body">
+    <view class="stats-head">
+      <text class="eyebrow">RHYTHM</text>
+      <view class="stats-title-row">
+        <text class="title-xl stats-title">统计</text>
+        <view class="pill pill-accent stats-streak">
+          <image class="icon" src="/assets/icons/spark-accent.png" />
+          <text>连续 {{streak}} 天</text>
+        </view>
+      </view>
+      <text class="stats-range">最近 7 天 · {{range}}</text>
+    </view>
+
+    <view class="stats-hero">
+      <view class="stats-hero-main">
+        <text class="stats-hero-label">连续记录</text>
+        <view class="stats-hero-value-row">
+          <text class="stats-hero-value">{{streak}}</text>
+          <text class="stats-hero-unit">天</text>
+        </view>
+      </view>
+      <view class="stats-hero-side">
+        <text class="stats-hero-today">{{todayLine}}</text>
+        <text class="stats-hero-note">轻量日也算，补记不清零。</text>
+      </view>
+    </view>
+
+    <view class="card stats-card">
+      <view class="stats-card-head">
+        <text class="stats-card-title">最近 7 天专注</text>
+        <text class="stats-card-meta">{{weekFocusLabel}} · {{weekDeltaLabel}}</text>
+      </view>
+      <view class="stats-chart">
+        <view class="{{item.className}}" wx:for="{{chartDays}}" wx:key="date">
+          <view class="stats-chart-track">
+            <view class="stats-chart-bar" style="height: {{item.heightPercent}}%"></view>
+          </view>
+          <text class="stats-chart-label">{{item.label}}</text>
+        </view>
+      </view>
+      <text class="stats-chart-hint" wx:if="{{!hasFocus}}">
+        这一周还没有专注记录，从今天的一小块开始。
+      </text>
+    </view>
+
+    <view class="stats-tiles">
+      <view class="stats-tile">
+        <text class="stats-tile-label">计划兑现</text>
+        <view class="stats-tile-value">
+          <text class="stats-tile-num">{{fulfillmentPercent}}</text>
+          <text class="stats-tile-unit">%</text>
+        </view>
+      </view>
+      <view class="stats-tile">
+        <text class="stats-tile-label">创作占比</text>
+        <view class="stats-tile-value">
+          <text class="stats-tile-num">{{createSharePercent}}</text>
+          <text class="stats-tile-unit">%</text>
+        </view>
+      </view>
+      <view class="stats-tile">
+        <text class="stats-tile-label">最常超时</text>
+        <view class="stats-tile-value stats-tile-value--text {{hasMostOver ? '' : 'is-empty'}}">
+          <view class="stats-cat-dot" wx:if="{{hasMostOver}}" style="background: {{mostOverColor}}"></view>
+          <text class="stats-tile-text">{{mostOverLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card stats-card">
+      <view class="stats-card-head">
+        <text class="stats-card-title">最近 14 天</text>
+        <text class="stats-card-meta">{{calendarActiveLabel}}</text>
+      </view>
+      <view class="stats-cal-grid">
+        <view class="{{item.className}}" wx:for="{{calendarDays}}" wx:key="date"></view>
+      </view>
+      <view class="stats-cal-foot">
+        <text>{{calendarRange}}</text>
+        <text class="stats-cal-today">{{calendarTodayLabel}}</text>
+      </view>
+      <text class="stats-cal-hint" wx:if="{{!hasActiveCalendar}}">
+        记下今天的一小块，点阵就会亮起来。
+      </text>
+    </view>
+
+    <view class="stats-badges-section">
+      <view class="section-label">
+        <text>轻量纪念</text>
+        <text class="section-label__meta">只记录，不排名</text>
+      </view>
+      <view class="stats-badges">
+        <view class="{{item.className}}" wx:for="{{badges}}" wx:key="key">
+          <view class="stats-badge-icon">
+            <image class="icon icon-sm" src="{{item.icon}}" />
+          </view>
+          <text class="stats-badge-title">{{item.title}}</text>
+          <text class="stats-badge-detail">{{item.detail}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="stats-action">
+      <button class="btn btn-ghost btn-block stats-weekly-btn" bindtap="handleWeekly">
+        <text>查看本周复盘</text>
+        <image class="icon stats-weekly-icon" src="/assets/icons/arrow-right-ink.png" />
+      </button>
+      <text class="stats-footnote">只和上周比，不和人比。</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,257 @@
+.collect-page {
+  padding-bottom: calc(180rpx + env(safe-area-inset-bottom));
+}
+
+.collect-body {
+  padding-top: 24rpx;
+}
+
+.collect-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.collect-head-text {
+  flex: 1;
+  min-width: 0;
+  padding-right: 16rpx;
+}
+
+.collect-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.collect-title {
+  font-size: 54rpx;
+}
+
+.collect-count {
+  margin-left: 16rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: var(--paper-2);
+  color: var(--muted);
+  font-size: 19rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.collect-sub {
+  display: block;
+  margin-top: 6rpx;
+  color: var(--muted);
+  font-size: 22rpx;
+}
+
+.collect-add {
+  flex: none;
+  margin-top: 4rpx;
+}
+
+.collect-filters {
+  margin: 26rpx 0 20rpx;
+}
+
+.collect-filter {
+  min-height: 60rpx;
+  margin: 0 12rpx 12rpx 0;
+  padding: 0 26rpx;
+}
+
+.collect-row {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 20rpx 8rpx 4rpx;
+  border: 1rpx solid var(--line-soft);
+  border-radius: 26rpx;
+  background: var(--card);
+}
+
+.collect-row + .collect-row {
+  margin-top: 16rpx;
+}
+
+.collect-row.is-done {
+  opacity: 0.58;
+  background: rgba(255, 253, 248, 0.55);
+}
+
+.collect-check {
+  width: 76rpx;
+  height: 76rpx;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collect-check-dot {
+  width: 36rpx;
+  height: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.collect-row.is-done .collect-check-dot {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.collect-check-icon {
+  width: 22rpx;
+  height: 22rpx;
+}
+
+.collect-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 10rpx 0;
+}
+
+.collect-open-text {
+  flex: 1;
+  min-width: 0;
+  padding-right: 16rpx;
+}
+
+.collect-title-text {
+  display: block;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 26rpx;
+  font-weight: 500;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.collect-row.is-done .collect-title-text {
+  color: var(--faint);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.collect-meta {
+  display: flex;
+  align-items: center;
+  margin-top: 2rpx;
+  color: var(--faint);
+  font-size: 19rpx;
+  line-height: 1.5;
+}
+
+.collect-dot {
+  width: 12rpx;
+  height: 12rpx;
+  flex: none;
+  margin-right: 8rpx;
+  border-radius: 50%;
+}
+
+.collect-sep {
+  margin: 0 8rpx;
+  color: var(--line);
+}
+
+.collect-time {
+  flex: none;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: var(--paper-2);
+  color: var(--muted);
+  font-size: 19rpx;
+  white-space: nowrap;
+}
+
+.collect-row.is-done .collect-time {
+  color: var(--faint);
+}
+
+.collect-inline-add {
+  width: 100%;
+  min-height: 84rpx;
+  margin-top: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx dashed var(--line);
+  border-radius: 24rpx;
+  background: transparent;
+  color: var(--muted);
+  font-size: 22rpx;
+}
+
+.collect-inline-add .icon-sm {
+  margin-right: 10rpx;
+}
+
+.collect-empty {
+  margin-top: 8rpx;
+}
+
+.collect-empty .btn {
+  min-height: 80rpx;
+}
+
+.collect-cta {
+  margin-top: 40rpx;
+  padding-top: 8rpx;
+}
+
+.collect-cta-icon {
+  margin-right: 0;
+  margin-left: 10rpx;
+}
+
+.collect-tip {
+  display: block;
+  margin-top: 16rpx;
+  color: var(--faint);
+  font-size: 19rpx;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.collect-sheet-body {
+  padding-bottom: 8rpx;
+}
+
+.collect-form-hint {
+  display: block;
+  margin-bottom: 4rpx;
+  color: var(--faint);
+  font-size: 20rpx;
+  line-height: 1.6;
+}
+
+.collect-sheet-actions {
+  display: flex;
+  align-items: center;
+}
+
+.collect-delete {
+  flex: none;
+  min-height: 92rpx;
+  padding: 0 28rpx;
+  border-radius: 26rpx;
+}
+
+.collect-save {
+  flex: 1;
+  min-height: 92rpx;
+  margin-left: 16rpx;
+  border-radius: 26rpx;
+}
+
+.collect-delete + .collect-save {
+  margin-left: 16rpx;
+}

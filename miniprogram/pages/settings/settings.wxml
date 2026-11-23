@@ -1,0 +1,146 @@
+<view class="page settings-page">
+  <view class="status-bar" style="height: {{statusBarHeight}}px"></view>
+
+  <view class="nav">
+    <view class="nav-side">
+      <button class="nav-back" bindtap="handleBack">
+        <image class="icon" src="/assets/icons/back-ink.png" />
+      </button>
+    </view>
+    <text class="nav-title">设置</text>
+    <view class="nav-side nav-side-right"></view>
+  </view>
+
+  <view class="page-body settings-body">
+    <view class="card settings-card">
+      <view class="section-label">
+        <text>关于你</text>
+      </view>
+      <view class="field">
+        <text class="field-label">昵称</text>
+        <input
+          class="input"
+          value="{{name}}"
+          maxlength="24"
+          placeholder="怎么称呼你"
+          placeholder-class="input-placeholder"
+          bindinput="onNameInput"
+        />
+      </view>
+    </view>
+
+    <view class="card settings-card">
+      <view class="section-label">
+        <text>一天的节奏</text>
+        <text class="section-label__meta">{{spanLabel}}</text>
+      </view>
+
+      <view class="field">
+        <view class="settings-label-row">
+          <text class="field-label">每日容量</text>
+          <text class="settings-value">{{capacityHours}}</text>
+        </view>
+        <view class="settings-input-wrap">
+          <input
+            class="input settings-input"
+            type="number"
+            value="{{capacity}}"
+            placeholder="360"
+            placeholder-class="input-placeholder"
+            bindinput="onCapacityInput"
+          />
+          <text class="settings-unit">分钟</text>
+        </view>
+        <text class="settings-hint">先按能稳定兑现的量来，超出的部分交给留白。</text>
+      </view>
+
+      <view class="field">
+        <view class="settings-label-row">
+          <text class="field-label">留白比例</text>
+          <text class="settings-value">{{bufferLabel}}</text>
+        </view>
+        <slider
+          class="settings-slider"
+          min="10"
+          max="40"
+          step="1"
+          value="{{buffer}}"
+          activeColor="#d95b33"
+          backgroundColor="#eee5d7"
+          block-color="#25221d"
+          block-size="20"
+          bindchanging="onBufferChange"
+          bindchange="onBufferChange"
+        ></slider>
+        <view class="settings-scale">
+          <text>10%</text>
+          <text>40%</text>
+        </view>
+      </view>
+
+      <view class="field-grid settings-times">
+        <view class="field">
+          <text class="field-label">开始</text>
+          <picker mode="time" value="{{dayStart}}" bindchange="onStartChange">
+            <view class="picker-value">
+              <text>{{dayStart}}</text>
+              <image class="icon" src="/assets/icons/arrow-right-ink.png" />
+            </view>
+          </picker>
+        </view>
+        <view class="field">
+          <text class="field-label">结束</text>
+          <picker mode="time" value="{{dayEnd}}" bindchange="onEndChange">
+            <view class="picker-value">
+              <text>{{dayEnd}}</text>
+              <image class="icon" src="/assets/icons/arrow-right-ink.png" />
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <view class="card settings-card">
+      <view class="section-label">
+        <text>新任务默认值</text>
+      </view>
+      <view class="field">
+        <view class="settings-label-row">
+          <text class="field-label">默认预估</text>
+          <text class="settings-value">{{estimateLabel}}</text>
+        </view>
+        <view class="settings-input-wrap">
+          <input
+            class="input settings-input"
+            type="number"
+            value="{{defaultEstimate}}"
+            placeholder="30"
+            placeholder-class="input-placeholder"
+            bindinput="onEstimateInput"
+          />
+          <text class="settings-unit">分钟</text>
+        </view>
+        <text class="settings-hint">收集箱里新建任务时，会先填这个时长。</text>
+      </view>
+    </view>
+
+    <view class="settings-danger">
+      <view class="settings-danger-head">
+        <view class="settings-danger-text-wrap">
+          <text class="settings-danger-title">重置演示数据</text>
+          <text class="settings-danger-text">回到最初的样子，清空本机所有记录。</text>
+        </view>
+        <button class="btn btn-ghost btn-sm settings-danger-trigger" bindtap="handleReset">
+          <image class="icon icon-sm" src="/assets/icons/refresh-ink.png" />
+          <text>重置</text>
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <view class="settings-footer">
+    <text class="settings-error" wx:if="{{error}}">{{error}}</text>
+    <button class="btn btn-primary btn-block" bindtap="handleSave">保存设置</button>
+    <text class="settings-version">v0.1.0 · 数据仅保存在本机</text>
+  </view>
+</view>

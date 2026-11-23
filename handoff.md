@@ -2,21 +2,26 @@
 
 最后更新：2026-11-23
 
-下次会话请先读 `STATUS.md` 和本文件，再决定从哪条路线继续。不要重新实现已经完成的屏幕。
+下次会话请先读 `STATUS.md` 和本文件，再继续。不要重新实现已经完成的 H5 或小程序页面。
 
 ## 当前坐标
 
-- 可运行的 H5 MVP 已完成：今日、收集箱、三步规划、专注、复盘、统计、设置。
+- H5 MVP 已完成：今日、收集箱、三步规划、专注、复盘、统计、设置。
+- 原生微信小程序版已完成：`miniprogram/`，7 个页面与主流程已接通。
 - 代码在 `https://github.com/Blues9527/daily-mark`。
 - PRD 在 `docs/daymark-prd.html`。
-- 当前平台是 H5，不是微信小程序。
-- 已有验证：`tsc`、12 个单测、7 组 Playwright E2E、生产构建全部通过。
+- H5 地址：`http://127.0.0.1:4173/?demo=1`（demo 固定 10:12；去掉参数用真实时间）。
+- 小程序打开方式：用微信开发者工具打开 `miniprogram/` 目录，不是仓库根目录。
+- 小程序 AppID 仍是 `touristappid`，正式预览前需要替换。
 - 首次进入是演示种子数据；设置里有「重置演示数据」。
-- `?demo=1` 固定时钟为当天 10:12；不带参数用真实时间。
+- H5 验证：`tsc`、12 个单测、7 组 Playwright E2E、生产构建通过。
+- 小程序验证：27 个 Node 测试、项目静态检查、7 页运行时桩与主要页面交互检查通过。
+- 小程序尚未做微信开发者工具 / 真机视觉验收；没有擅自启动模拟器。
+- 小程序版本已加入本地 `main`，尚未推送；H5 基线也在 `main`。
 
 ## 下次会话的第一件事
 
-1. 进入项目并确认依赖：
+1. 进入仓库并安装 H5 依赖：
 
 ```bash
 git clone https://github.com/Blues9527/daily-mark.git
@@ -25,14 +30,7 @@ pnpm install
 pnpm dev
 ```
 
-2. 打开 `http://127.0.0.1:4173/?demo=1`，走一遍主流程：
-   - 今日 → 移出 2 项
-   - 收集 → 新增 / 编辑 / 删除
-   - 重新规划 → 三步 → 完成今日规划
-   - 开始专注 → 暂停 / 走神 / 部分完成
-   - 复盘 → 归因 / 接受建议 / 保存
-   - 设置 → 改容量 / 重置
-3. 跑质量门禁：
+2. 先跑 H5 基线，确认没有回归：
 
 ```bash
 pnpm exec tsc --noEmit
@@ -41,91 +39,104 @@ python3 e2e/test_app.py
 pnpm run build
 ```
 
-E2E 需要本机 Chrome 和已启动的 4173 dev server。
+3. 再跑小程序静态与逻辑检查：
+
+```bash
+python3 miniprogram/tools/check_project.py
+node --test miniprogram/tests/*.test.js
+node miniprogram/tools/runtime_check.js
+```
+
+4. 视觉验收前先征得用户允许，再启动微信开发者工具或模拟器。打开 `miniprogram/` 目录，重点走查下面的清单。
+
+## 小程序视觉验收清单
+
+- 顶部安全区：状态栏、原生胶囊、自定义内容是否互相遮挡；不同机型是否正常。
+- 原生 tabBar：今日 / 收集 / 复盘 / 统计的图标、选中色、页面切换。
+- 今日：容量卡、进度条、三件事、当前块、时间轴绝对定位、现在线。
+- 收集：筛选、勾选、新增 / 编辑 Sheet、键盘、隐藏 / 恢复 tabBar。
+- 规划：三步切换、候选 14 件、最多三件、排程、固定 CTA 不被内容遮挡。
+- 专注：深色全屏、canvas 圆环与时间文字、暂停、部分完成 Sheet、走神捕手。
+- 复盘：进行中提示、深色分数卡、分类对比、原因 chips、建议、保存。
+- 统计：7 天柱状图、3 个指标、14 天点阵、徽章。
+- 设置：slider、时间 picker、固定底部保存、重置确认。
+- 数据：切页 / 杀进程 / 重新打开后，任务、计划、专注 session 是否正确恢复。
 
 ## 路线决策（需要用户确认）
 
-### A. 移植微信小程序（如果最终产品必须是小程序）
+### A. 小程序验收与发布（推荐下一步）
 
-建议先做一次 1 天以内的移植评估，再决定 Taro 还是原生：
+- 在微信开发者工具中做第一轮视觉走查，修复胶囊、键盘、canvas、WXSS 细节。
+- 替换 `touristappid`，配置真实 AppID 与项目成员。
+- 真机走一遍「规划 → 专注 → 复盘」。
+- 补隐私协议、用户协议、数据说明、体验版上传与审核资料。
+- 按 AGENTS 规则：启动模拟器前先获得用户允许；测试环境不要打 release 包。
 
-- 审计平台依赖：`window`、`localStorage`、`100dvh`、`backdrop-filter`、`conic-gradient`、绝对定位时间轴、`<svg>`、`<input type="time">`。
-- 领域层 `src/lib`、`src/types.ts`、`src/data` 与平台无关，优先抽成可复用 core。
-- UI 层是 DOM/CSS，不能直接放进 WXML；Taro 可以复用 React 心智和大部分组件结构，但仍需把 `div/button/input` 换成 `View/Button/Input`，并处理 CSS 限制。
-- 存储需要适配 `wx.setStorageSync` / 云数据库。
-- 微信登录、订阅消息、云同步、数据导出/删除需要单独排期。
-- 验收必须在微信开发者工具或真机进行；按 AGENTS 规则，启动模拟器前必须先获得允许。
+### B. 小程序后端与账号
 
-### B. 先在 H5 上补齐产品闭环（如果当前目标是验证需求）
+- 微信登录、手机号绑定、云数据库（微信云开发或自建）。
+- 多端同步、冲突解决、schema 迁移。
+- 订阅消息：规划提醒、时间块开始、晚间复盘。
+- 数据导出、账号删除、隐私合规。
+- 建议先做本地 `mode: demo | real` 与 onboarding，再接入云端。
 
-无论最终平台是什么，这些工作都能复用：
+### C. H5 继续打磨
 
-1. 正式 onboarding：昵称、每日容量、开始/结束时间；区分 demo 与真实用户。
-2. 新用户空态：今日无计划、收集箱为空、首次复盘。
-3. 埋点：按 PRD 事件表接入 `app_open`、`plan_start`、`plan_schedule_accept`、`block_start`、`focus_start`、`distraction_add`、`block_complete`、`block_reschedule`、`review_submit`、`streak_extend`。
-4. 数据导出（JSON/Markdown）与「清空本机数据」。
-5. 复盘口径与容量口径统一；补一个「今天还在进行中」的明确结束动作。
-6. iOS Safari / 微信内置浏览器走查。
-
-### C. 先做技术债清理（半天到一天）
-
-- 统一「仪式块是否计入已排容量」的口径。
-- 清理 `PlanFlow` 模块级 planMemory，改为 store 或可重置的 session 状态。
-- 为 localStorage 增加 schema 版本迁移。
-- 增加错误边界与基础错误上报。
-- 初始化 git 仓库并提交当前基线；当前目录尚未 `git init`。
-
-## 推荐顺序（没有新指令时）
-
-1. 先做 C 的口径统一与 demo/真实数据分离。
-2. 再做 B 的 onboarding + 空态 + 数据导出 + 埋点。
-3. 用 5 位目标用户走查一轮，确认「容量」「留白」「三件事」是否被理解。
-4. 再进入 A，避免把未验证的交互直接搬进小程序。
-
-如果用户明确「就是要小程序，先跑起来」，则直接进入 A 的移植评估，不要继续打磨 H5 细节。
+- onboarding、新用户空态、真实数据模式。
+- 埋点事件按 PRD 落地。
+- 数据导出、账号删除、iOS Safari / 微信内置浏览器走查。
+- 与小程序同步容量 / 排程 / 复盘规则，避免两端行为漂移。
 
 ## 立即可执行的 5 个任务
 
-- [ ] 运行应用与全部测试，确认当前基线没有回归。
-- [ ] 决定下一里程碑：A 小程序 / B H5 闭环 / C 技术债。
-- [ ] 如果选 B：新增 onboarding 数据模型与首次启动分支，保留 `?demo=1` 作为演示入口。
-- [ ] 如果选 B：接入埋点模块（建议先写 `src/lib/analytics.ts`，localStorage 环形缓冲，后续替换上报端点）。
-- [ ] 如果选 A：列出所有平台依赖文件，做一个最小 Taro 页面验证时间轴、Sheet、深色专注屏能否还原。
+- [ ] 运行 H5 与小程序全部检查，确认基线。
+- [ ] 获得允许后，用微信开发者工具打开 `miniprogram/` 做视觉走查。
+- [ ] 优先修胶囊安全区、canvas 清晰度、键盘遮挡、tabBar 与 Sheet 层级。
+- [ ] 替换 AppID，真机主流程验收。
+- [ ] 验收通过后推送小程序版本，并更新 STATUS。
 
 ## 关键实现提示
 
-- 状态入口：`src/store/AppProvider.tsx`，屏幕只通过 `useApp()` 读写，不要在屏幕里另造全局状态。
-- 容量：`capacityStatus` / `trimCandidates` / `buildSmartSchedule`。
-- 复盘：`computeDayRecord`；建议：`suggestTomorrowCapacity`。
-- 持久化 key：`daymark.state.v1`。
-- 首次种子：`src/data/seed.ts`；若要真实空态，不要直接删种子，先在 provider 增加 `mode: demo | real`。
-- 专注恢复：`state.focus` 存 `startedAt` / `accumulatedSec` / `paused`，刷新后用 `focusElapsedSeconds` 继续。
-- 明日容量：`tomorrowCapacityMin` 在下一天创建新计划时生效。
-- 设置重置：`resetDemo()` 会恢复种子数据，但不会清理 `PlanFlow` 的模块级记忆。
+- H5 状态：`src/store/AppProvider.tsx`；页面只通过 `useApp()` 读写。
+- 小程序 store：`miniprogram/utils/store.js`；页面通过 `require('../../utils/store')` 调用。
+- 小程序领域逻辑：`miniprogram/utils/{capacity,schedule,review,stats,focus,date,format,seed}.js`。
+- 小程序页面：`miniprogram/pages/{today,collect,plan,focus,review,stats,settings}/`。
+- 小程序共享样式：`miniprogram/app.wxss`；页面样式在各页 `*.wxss`。
+- 小程序图标：`miniprogram/assets/icons/`，由 `miniprogram/tools/generate_icons.py` 生成。
+- 持久化 key：H5 `daymark.state.v1`；小程序 `wx.setStorageSync('daymark.state.v1')`。
+- 小程序顶部 spacer 的 `statusBarHeight` 已被设置为「胶囊底部 + 8px」，用于避开原生胶囊；不要按普通状态栏高度理解。
+- 专注圆环使用 legacy canvas，并把倒计时文字直接绘制在 canvas 上，避免原生组件层级遮挡。
+- 收集 Sheet 会调用 `wx.hideTabBar`，关闭时恢复；改 Sheet 交互时保留这个行为。
+- H5 端到端脚本：`e2e/test_app.py`；小程序静态检查：`miniprogram/tools/check_project.py`；运行时桩：`miniprogram/tools/runtime_check.js`。
 
 ## 已知坑
 
-- 早间打开复盘会显示 5% 当前进度；这是「进行中」语义，不要误判为 bug。
-- 种子计划把复盘仪式计入容量，智能排程生成的新计划不计入；统一前不要写依赖精确总和的测试。
-- 规划页「换时间」只在本地草稿上移动，不会扩展留白；提交前不会写回 store。
-- 删除任务是跨计划删除；后续做历史记录时要注意。
-- 桌面端是 430px 居中壳，不是响应式宽屏后台；不要按桌面后台思路改布局。
-- 目前没有后端、登录、云同步；所有「保存」都指 localStorage。
+- 小程序没有在开发者工具 / 真机里看过，任何“视觉上应该没问题”的判断都要以实际截图为准。
+- 原生胶囊与自定义导航容易重叠；当前用较大的顶部 spacer 规避，可能需要在真机上调小。
+- canvas 是原生组件，已把时间绘制进 canvas；不要再把普通 `view` 叠在 canvas 上作为唯一时间显示。
+- 小程序 tab 页上的 Sheet 无法覆盖原生 tabBar，当前用隐藏 tabBar 处理；新增加 Sheet 时注意。
+- 小程序页面禁止使用 `window`、`localStorage`、`document`、ES import/export；领域逻辑用 CommonJS。
+- WXSS 已避开 grid、gap、backdrop-filter、conic-gradient、`:hover`；新增样式时继续保持。
+- 规划页固定 CTA 与设置页固定 footer 依赖页面底部 padding；改布局时一起检查。
+- 早间复盘显示「当前进度」不是最终成绩；这是进行中语义。
+- 种子计划把复盘仪式计入容量，新生成的计划不计入；统一前不要写依赖精确总和的测试。
+- H5 与小程序是两套 UI，业务规则同步修改，避免两端结果不同。
+- 目前没有后端、登录、云同步；两端「保存」都只写本机。
 
 ## 开放问题
 
-1. 日刻这个名字是否最终保留？
-2. 最终平台是微信小程序，还是 H5/PWA 也可以？
-3. 如果做小程序，选 Taro 还是原生？是否需要复用现有 React UI？
-4. 登录与云同步用微信云开发，还是自建后端？
-5. 免费/订阅边界如何划分？智能排程、周报、云同步是否付费？
-6. 是否保留演示种子数据作为「示例一天」，还是正式用户必须从空态开始？
-7. 是否需要数据导出与账号删除在首个版本就上线？
+1. 小程序 AppID 是否已经准备好？是否用微信云开发？
+2. 是否先做真机视觉验收，再决定是否继续加账号 / 云同步？
+3. 订阅消息要哪几类：规划、块开始、复盘，还是全部？
+4. 数据导出与账号删除是否作为首个版本的上线门槛？
+5. 日刻这个名字是否最终保留？
+6. 免费 / 订阅边界如何划分？
+7. H5 与小程序是否长期双端维护，还是小程序验收后以小程序为主？
 
 ## 完成定义（下一里程碑）
 
-- 选定平台路线并写入 STATUS。
-- 新用户可从空态完成一次「规划 → 专注 → 复盘」闭环。
-- 关键行为有埋点，数据可导出。
-- 主流程 E2E 继续通过。
-- 如果做小程序：至少在微信开发者工具或真机完成一次主流程验收，并记录平台限制。
+- 小程序在微信开发者工具和至少一台真机上完成一次主流程：规划 → 专注 → 复盘。
+- 胶囊、tabBar、Sheet、canvas、键盘、固定 footer 无阻塞问题。
+- 静态检查、27 个领域 / store 测试、运行时桩继续通过。
+- 替换 AppID，记录真机与基础库版本。
+- 更新 STATUS 后再提交小程序版本。

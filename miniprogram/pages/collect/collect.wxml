@@ -1,0 +1,120 @@
+<view class="page collect-page">
+  <view style="height: {{statusBarHeight}}px;"></view>
+  <view class="page-body collect-body">
+    <view class="collect-head">
+      <view class="collect-head-text">
+        <view class="collect-title-row">
+          <view class="title-xl collect-title">收集箱</view>
+          <view class="collect-count">{{openCount}} 件未完成</view>
+        </view>
+        <text class="collect-sub">先记下来，晚点再决定</text>
+      </view>
+      <button class="icon-btn collect-add" hover-class="btn-hover" aria-label="记一件事" bindtap="openCreate">
+        <image class="icon" src="/assets/icons/plus-ink.png" mode="aspectFit"></image>
+      </button>
+    </view>
+
+    <view class="chip-row collect-filters">
+      <button wx:for="{{filters}}" wx:key="value" class="chip collect-filter {{filter === item.value ? 'chip-active' : ''}}" hover-class="btn-hover" data-value="{{item.value}}" bindtap="onFilter">{{item.label}}</button>
+    </view>
+
+    <view wx:if="{{tasks.length > 0}}" class="collect-list">
+      <view wx:for="{{tasks}}" wx:key="id" class="collect-row {{item.done ? 'is-done' : ''}}" aria-role="button" aria-label="编辑 {{item.title}}" data-id="{{item.id}}" bindtap="openEdit">
+        <button class="collect-check" catchtap="onToggleDone" hover-class="btn-hover" data-id="{{item.id}}" aria-label="{{item.done ? '标记为未完成' : '完成这件事'}}">
+          <view class="collect-check-dot">
+            <image wx:if="{{item.done}}" class="collect-check-icon" src="/assets/icons/check-cream.png" mode="aspectFit"></image>
+          </view>
+        </button>
+        <view class="collect-open">
+          <view class="collect-open-text">
+            <text class="collect-title-text">{{item.title}}</text>
+            <view class="collect-meta">
+              <view class="collect-dot" style="background: {{item.color}};"></view>
+              <text>{{item.categoryLabel}}</text>
+              <text class="collect-sep">·</text>
+              <text>{{item.energyLabel}}</text>
+            </view>
+          </view>
+          <text class="collect-time">{{item.estimateLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="empty collect-empty">
+      <text class="empty-title">{{emptyTitle}}</text>
+      <text class="empty-text">{{emptyText}}</text>
+      <button class="btn btn-ghost" hover-class="btn-hover" bindtap="openCreate">
+        <image class="icon" src="/assets/icons/plus-ink.png" mode="aspectFit"></image>
+        记一件
+      </button>
+    </view>
+
+    <button wx:if="{{tasks.length > 0}}" class="collect-inline-add" hover-class="btn-hover" bindtap="openCreate">
+      <image class="icon-sm" src="/assets/icons/plus-ink.png" mode="aspectFit"></image>
+      再记一条
+    </button>
+
+    <view class="collect-cta">
+      <button class="btn btn-primary btn-block" hover-class="btn-hover" bindtap="goPlan">
+        开始今日规划
+        <image class="icon collect-cta-icon" src="/assets/icons/arrow-right-cream.png" mode="aspectFit"></image>
+      </button>
+      <text class="collect-tip">收集箱不是待办清单，它是你的缓冲区。</text>
+    </view>
+  </view>
+
+  <view wx:if="{{sheetOpen}}" class="sheet-mask" bindtap="closeSheet">
+    <view class="sheet collect-sheet" catchtap="noop">
+      <view class="sheet-grip"></view>
+      <view class="sheet-head">
+        <text class="sheet-title">{{editingId ? '编辑这件事' : '记一件事'}}</text>
+        <button class="icon-btn" hover-class="btn-hover" aria-label="关闭" bindtap="closeSheet">
+          <image class="icon" src="/assets/icons/close-ink.png" mode="aspectFit"></image>
+        </button>
+      </view>
+
+      <scroll-view scroll-y="true" class="sheet-body collect-sheet-body">
+        <view class="field">
+          <text class="field-label">事情</text>
+          <input class="input" value="{{formTitle}}" maxlength="120" placeholder="比如：回复合作邀约邮件" placeholder-class="input-placeholder" bindinput="onTitleInput" />
+        </view>
+
+        <view class="field">
+          <text class="field-label">预估时长（分钟）</text>
+          <input class="input" type="number" value="{{formEstimate}}" placeholder="30" placeholder-class="input-placeholder" bindinput="onEstimateInput" />
+        </view>
+
+        <view class="field-grid">
+          <view class="field">
+            <text class="field-label">类别</text>
+            <picker mode="selector" range="{{categoryLabels}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+              <view class="picker-value">
+                <text>{{categoryLabel}}</text>
+                <image class="icon" src="/assets/icons/arrow-right-ink.png" mode="aspectFit"></image>
+              </view>
+            </picker>
+          </view>
+          <view class="field">
+            <text class="field-label">精力</text>
+            <picker mode="selector" range="{{energyLabels}}" value="{{energyIndex}}" bindchange="onEnergyChange">
+              <view class="picker-value">
+                <text>{{energyLabel}}</text>
+                <image class="icon" src="/assets/icons/arrow-right-ink.png" mode="aspectFit"></image>
+              </view>
+            </picker>
+          </view>
+        </view>
+
+        <text class="collect-form-hint">{{canSave ? '写一句就够了，时长和分类之后都能改。' : '先写一句要做什么，保存就会亮起来。'}}</text>
+      </scroll-view>
+
+      <view class="sheet-foot collect-sheet-actions">
+        <button wx:if="{{editingId}}" class="btn btn-ghost collect-delete" hover-class="btn-hover" bindtap="onDelete">
+          <image class="icon" src="/assets/icons/trash-ink.png" mode="aspectFit"></image>
+          删除
+        </button>
+        <button class="btn btn-primary collect-save" disabled="{{!canSave}}" hover-class="btn-hover" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

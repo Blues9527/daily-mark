@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/today/today",
+    "pages/collect/collect",
+    "pages/review/review",
+    "pages/stats/stats",
+    "pages/plan/plan",
+    "pages/focus/focus",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#fbf7f0",
+    "backgroundColor": "#fbf7f0",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#a89e90",
+    "selectedColor": "#b8461f",
+    "backgroundColor": "#fffdf8",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/today/today",
+        "text": "今日",
+        "iconPath": "assets/icons/tab-today.png",
+        "selectedIconPath": "assets/icons/tab-today-active.png"
+      },
+      {
+        "pagePath": "pages/collect/collect",
+        "text": "收集",
+        "iconPath": "assets/icons/tab-collect.png",
+        "selectedIconPath": "assets/icons/tab-collect-active.png"
+      },
+      {
+        "pagePath": "pages/review/review",
+        "text": "复盘",
+        "iconPath": "assets/icons/tab-review.png",
+        "selectedIconPath": "assets/icons/tab-review-active.png"
+      },
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "统计",
+        "iconPath": "assets/icons/tab-stats.png",
+        "selectedIconPath": "assets/icons/tab-stats-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

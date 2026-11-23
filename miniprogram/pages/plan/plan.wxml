@@ -1,0 +1,237 @@
+<view class="page plan-page">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <view class="plan-head">
+    <view class="plan-top">
+      <button class="nav-back" bindtap="onBack" hover-class="btn-hover" aria-label="返回上一步">
+        <image class="icon" src="/assets/icons/back-ink.png" mode="aspectFit"></image>
+      </button>
+      <view class="plan-top-center">
+        <text class="plan-top-kicker">{{stepKicker}}</text>
+      </view>
+      <button class="nav-back" bindtap="onClose" hover-class="btn-hover" aria-label="关闭晨间规划">
+        <image class="icon" src="/assets/icons/close-ink.png" mode="aspectFit"></image>
+      </button>
+    </view>
+
+    <view class="plan-steps">
+      <view class="plan-step {{step === 1 ? 'is-active' : ''}} {{step > 1 ? 'is-done' : ''}}">01 清空大脑</view>
+      <view class="plan-step {{step === 2 ? 'is-active' : ''}} {{step > 2 ? 'is-done' : ''}}">02 只留三件</view>
+      <view class="plan-step {{step === 3 ? 'is-active' : ''}}">03 排进时间</view>
+    </view>
+  </view>
+
+  <view wx:if="{{step === 1}}" class="page-body plan-body">
+    <view class="plan-title">先把脑子里的东西倒出来。</view>
+    <view class="plan-sub">不排序，不判断。想到什么写什么，时长可以之后再改。这里不会评判你。</view>
+
+    <view class="plan-quick">
+      <input
+        class="plan-quick-input"
+        value="{{draft}}"
+        placeholder="现在最占脑子的一件事是…"
+        placeholder-class="input-placeholder"
+        confirm-type="done"
+        bindinput="onDraftInput"
+        bindconfirm="onAddDraft"
+      />
+      <button
+        class="plan-quick-btn {{canAdd ? '' : 'is-disabled'}}"
+        disabled="{{!canAdd}}"
+        bindtap="onAddDraft"
+        hover-class="btn-hover"
+        aria-label="添加这件事"
+      >
+        <image class="icon" src="/assets/icons/plus-cream.png" mode="aspectFit"></image>
+      </button>
+    </view>
+
+    <view class="chip-row plan-chips">
+      <button
+        wx:for="{{quickIdeas}}"
+        wx:key="*this"
+        class="chip"
+        data-title="{{item}}"
+        bindtap="onQuickAdd"
+        hover-class="btn-hover"
+      >{{item}}</button>
+    </view>
+
+    <view class="section-label">
+      候选
+      <text class="section-label__meta">{{candidateCount}} 件</text>
+    </view>
+
+    <view wx:if="{{candidateCount > 0}}" class="plan-dump-list">
+      <view wx:for="{{candidates}}" wx:key="id" class="plan-dump-row">
+        <view class="plan-dump-dot" style="background: {{item.categoryColor}};"></view>
+        <text class="plan-dump-title ellipsis">{{item.title}}</text>
+        <view wx:if="{{item.moved}}" class="pill plan-dump-pill">顺延</view>
+        <text class="plan-dump-min">{{item.durationText}}</text>
+      </view>
+    </view>
+
+    <view wx:else class="empty plan-empty">
+      <text class="empty-title">还没有候选</text>
+      <text class="empty-text">先写下一件占脑子的事，哪怕只是一句话。写下来，才有得挑。</text>
+    </view>
+  </view>
+
+  <view wx:if="{{step === 2}}" class="page-body plan-body">
+    <view class="plan-title">今天只做三件事。</view>
+    <view class="plan-sub">选 3 件「做完今天就算没白过」的事。其余不会消失，会进入「本周稍后」，明天还可以再挑。</view>
+
+    <block wx:if="{{candidateCount > 0}}">
+      <view class="plan-picks">
+        <button
+          wx:for="{{candidates}}"
+          wx:key="id"
+          class="plan-pick {{item.picked ? 'is-on' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onPick"
+          hover-class="btn-hover"
+        >
+          <view class="plan-pick-box {{item.picked ? 'is-on' : ''}}">
+            <image
+              wx:if="{{item.picked}}"
+              class="icon plan-pick-check"
+              src="/assets/icons/check-cream.png"
+              mode="aspectFit"
+            ></image>
+          </view>
+          <view class="plan-pick-main">
+            <text class="plan-pick-title ellipsis">{{item.title}}</text>
+            <view class="plan-pick-meta">
+              <view class="plan-pick-dot" style="background: {{item.categoryColor}};"></view>
+              <text>{{item.categoryLabel}} · {{item.durationText}} · {{item.energyLabel}}</text>
+            </view>
+          </view>
+          <text class="plan-pick-rank">{{item.rankLabel}}</text>
+        </button>
+      </view>
+
+      <view class="plan-later">
+        <text>{{laterLeft}}</text>
+        <text>{{laterRight}}</text>
+      </view>
+    </block>
+
+    <view wx:else class="empty plan-empty">
+      <text class="empty-title">还没有可挑的事</text>
+      <text class="empty-text">回到上一步写一两件，今天才有得选。</text>
+      <button class="btn btn-ghost" bindtap="onBack" hover-class="btn-hover">回去写一件</button>
+    </view>
+  </view>
+
+  <view wx:if="{{step === 3}}" class="page-body plan-body">
+    <view class="plan-title">把三件事放进今天。</view>
+    <view class="plan-sub">按你的精力曲线，把重要的事放在前面。系统会先留出缓冲，再计算是否排得下。</view>
+
+    <view class="card plan-cap">
+      <view class="plan-cap-stats">
+        <view class="plan-cap-stat">
+          <text class="plan-cap-label">已排</text>
+          <text class="plan-cap-value is-accent">{{capPlanned}}</text>
+        </view>
+        <view class="plan-cap-stat">
+          <text class="plan-cap-label">容量</text>
+          <text class="plan-cap-value">{{capCapacity}}</text>
+        </view>
+        <view class="plan-cap-stat">
+          <text class="plan-cap-label">留白</text>
+          <text class="plan-cap-value">{{capRemaining}}</text>
+        </view>
+      </view>
+      <view class="progress plan-cap-meter">
+        <view class="progress-fill progress-fill--safe" style="width: {{capWidth}};"></view>
+      </view>
+      <view class="plan-cap-meta">
+        <text>{{dayStartText}}</text>
+        <text>{{capMeta}}</text>
+        <text>{{dayEndText}}</text>
+      </view>
+    </view>
+
+    <view class="section-label">
+      排程
+      <text class="section-label__meta">{{rangeText}}</text>
+    </view>
+
+    <view wx:if="{{blocks.length > 0}}" class="plan-sched-list">
+      <view wx:for="{{blocks}}" wx:key="id" class="plan-sched-row">
+        <view class="plan-sched-head">
+          <text class="plan-sched-time">{{item.timeText}}</text>
+          <view class="plan-sched-bar" style="background: {{item.color}};"></view>
+          <text class="plan-sched-title ellipsis">{{item.titleText}}</text>
+          <text class="plan-sched-min">{{item.durationText}}</text>
+        </view>
+        <view class="plan-sched-foot">
+          <text>{{item.kindLabel}}</text>
+          <button
+            wx:if="{{item.canMove}}"
+            class="plan-sched-move"
+            data-id="{{item.id}}"
+            bindtap="onMoveBlock"
+            hover-class="btn-hover"
+          >换时间</button>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="empty plan-empty">
+      <text class="empty-title">这一版没有排进任何任务</text>
+      <text class="empty-text">可以重新排一版，或回到上一步调整挑选。</text>
+    </view>
+
+    <button class="btn btn-ghost plan-reroll" bindtap="onReroll" hover-class="btn-hover">
+      <image class="icon icon-sm" src="/assets/icons/refresh-ink.png" mode="aspectFit"></image>
+      重新排一版
+    </button>
+
+    <view wx:if="{{unscheduled.length > 0}}" class="plan-warn">
+      <text class="plan-warn-title">还有 {{unscheduled.length}} 件没排进今天</text>
+      <text class="plan-warn-text">容量或时间不够，今天先不给它们排时间。可以重新排一版，或回到上一步少挑一件。</text>
+      <view class="plan-warn-list">
+        <view wx:for="{{unscheduled}}" wx:key="id" class="plan-warn-item">
+          <view class="plan-warn-dot"></view>
+          <text class="plan-warn-item-title">{{item.title}}</text>
+          <text class="plan-warn-item-min">{{item.durationText}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{step === 1}}" class="plan-cta">
+    <button
+      class="btn btn-primary btn-block"
+      disabled="{{candidateCount === 0}}"
+      bindtap="goStep2"
+      hover-class="btn-hover"
+    >
+      下一步 · 挑出三件事
+      <image class="icon plan-arrow" src="/assets/icons/arrow-right-cream.png" mode="aspectFit"></image>
+    </button>
+    <text class="plan-tip">{{step1Tip}}</text>
+  </view>
+
+  <view wx:if="{{step === 2}}" class="plan-cta">
+    <button
+      class="btn btn-primary btn-block"
+      disabled="{{pickedCount === 0}}"
+      bindtap="goStep3"
+      hover-class="btn-hover"
+    >
+      下一步 · 排进时间
+      <image class="icon plan-arrow" src="/assets/icons/arrow-right-cream.png" mode="aspectFit"></image>
+    </button>
+    <text class="plan-tip">{{step2Tip}}</text>
+  </view>
+
+  <view wx:if="{{step === 3}}" class="plan-cta">
+    <button class="btn btn-accent btn-block" bindtap="onCommitPlan" hover-class="btn-hover">
+      <image class="icon" src="/assets/icons/check-cream.png" mode="aspectFit"></image>
+      完成今日规划
+    </button>
+    <text class="plan-tip">之后随时可以在今日页点「重新规划」。</text>
+  </view>
+</view>

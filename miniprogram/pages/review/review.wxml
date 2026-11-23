@@ -1,0 +1,162 @@
+<view class="page review-page">
+  <view class="status-bar" style="height: {{statusBarHeight}}px"></view>
+  <view class="page-body">
+    <view class="rv-head">
+      <view class="rv-head-main">
+        <view class="rv-title-row">
+          <text class="title-lg">今日复盘</text>
+          <view class="pill pill-green rv-reviewed" wx:if="{{reviewed}}">
+            <image class="icon" src="/assets/icons/check-ink.png" />
+            <text>已复盘</text>
+          </view>
+        </view>
+        <text class="rv-date">{{dateLabel}} · 60 秒对账</text>
+      </view>
+      <view class="pill pill-accent rv-streak">
+        <image class="icon" src="/assets/icons/spark-accent.png" />
+        <text>连续 {{streak}} 天</text>
+      </view>
+    </view>
+
+    <view class="rv-progress-note" wx:if="{{inProgress}}">
+      <image class="rv-progress-icon" src="/assets/icons/clock-accent.png" />
+      <text>今天还在进行中，这里是当前进度。</text>
+    </view>
+
+    <view class="rv-score" wx:if="{{hasPlan}}">
+      <view class="rv-score-top">
+        <view class="rv-score-main">
+          <text class="rv-score-label">{{scoreLabel}}</text>
+          <view class="rv-score-big">
+            <text class="rv-score-num">{{percent}}</text>
+            <text class="rv-score-unit">%</text>
+          </view>
+        </view>
+        <text class="rv-score-tag">{{scoreTag}}</text>
+      </view>
+
+      <view class="rv-score-bar">
+        <view class="rv-score-bar-fill" style="width: {{percent}}%"></view>
+      </view>
+
+      <view class="rv-score-stats">
+        <view class="rv-score-stat">
+          <text class="rv-score-stat-label">任务完成</text>
+          <text class="rv-score-stat-value">{{completedTasks}} / {{totalTasks}}</text>
+        </view>
+        <view class="rv-score-stat">
+          <text class="rv-score-stat-label">实际专注</text>
+          <text class="rv-score-stat-value">{{actualLabel}}</text>
+        </view>
+        <view class="rv-score-stat">
+          <text class="rv-score-stat-label">计划总量</text>
+          <text class="rv-score-stat-value">{{plannedLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="rv-score rv-score-empty" wx:else>
+      <text class="rv-score-kicker">今日对账</text>
+      <text class="rv-score-empty-title">今天还没有可对账的计划。</text>
+      <text class="rv-score-empty-text">先排下三件事和几个时间块，晚上回来只需一分钟。</text>
+      <button class="btn btn-accent btn-sm rv-score-empty-action" bindtap="goPlan">
+        <image class="icon" src="/assets/icons/arrow-right-cream.png" />
+        <text>去规划今天</text>
+      </button>
+    </view>
+
+    <view class="card rv-block" wx:if="{{hasPlan}}">
+      <view class="section-label">
+        <text>计划 VS 实际</text>
+        <text class="section-label__meta">按类别</text>
+      </view>
+
+      <view wx:if="{{categoryRows.length}}">
+        <view class="rv-cmp-row" wx:for="{{categoryRows}}" wx:key="category">
+          <view class="rv-cmp-top">
+            <view class="rv-cmp-label">
+              <view class="rv-cmp-dot" style="background: {{item.color}}"></view>
+              <text>{{item.label}}</text>
+            </view>
+            <text class="rv-cmp-num">计划 {{item.planLabel}} · 实际 {{item.actualLabel}}</text>
+          </view>
+          <view class="rv-cmp-track">
+            <view class="rv-cmp-plan" style="width: {{item.planWidth}}%"></view>
+            <view
+              class="rv-cmp-actual"
+              style="width: {{item.actualWidth}}%; background: {{item.color}}"
+            ></view>
+          </view>
+        </view>
+      </view>
+      <text class="rv-cmp-empty" wx:else>今天还没有带时长的任务可以对账。</text>
+
+      <view class="rv-legend">
+        <view class="rv-legend-item">
+          <view class="rv-legend-swatch rv-legend-plan"></view>
+          <text>计划</text>
+        </view>
+        <view class="rv-legend-item">
+          <view class="rv-legend-swatch rv-legend-cats"></view>
+          <text>实际（类别色）</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card rv-block">
+      <view class="section-label">
+        <text>{{inProgress ? '如果今天有偏差' : '为什么有偏差'}}</text>
+        <text class="section-label__meta">最多 2 个 · {{reasons.length}}/2</text>
+      </view>
+      <view class="chip-row">
+        <view
+          class="{{item.className}}"
+          wx:for="{{chips}}"
+          wx:key="label"
+          data-reason="{{item.label}}"
+          bindtap="toggleReason"
+        >
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+      <text class="rv-reasons-hint">{{reasonHint}}</text>
+    </view>
+
+    <view class="rv-suggest {{accepted ? 'is-accepted' : ''}}" wx:if="{{hasSuggestion}}">
+      <view class="rv-suggest-head">
+        <text class="rv-suggest-title">{{suggestionTitle}}</text>
+        <view class="pill pill-green" wx:if="{{accepted}}">
+          <text>已接受</text>
+        </view>
+      </view>
+      <text class="rv-suggest-text">{{suggestionReason}}</text>
+      <text class="rv-suggest-done" wx:if="{{accepted}}">已记下，明天先按这个容量试。</text>
+      <button class="btn btn-accent btn-sm" wx:else bindtap="acceptSuggestion">
+        <text>接受这个建议</text>
+      </button>
+    </view>
+
+    <view class="card rv-block">
+      <view class="section-label">
+        <text>今天最值得保留的一件事</text>
+        <text class="section-label__meta">{{noteLength}}/200</text>
+      </view>
+      <textarea
+        class="textarea rv-note"
+        value="{{note}}"
+        maxlength="200"
+        placeholder="写一句就好，给明天的自己。"
+        placeholder-class="input-placeholder"
+        bindinput="onNoteInput"
+      ></textarea>
+    </view>
+
+    <view class="rv-submit">
+      <button class="btn btn-accent btn-block" bindtap="handleSave">
+        <image class="icon" src="/assets/icons/check-cream.png" />
+        <text>{{saveLabel}}</text>
+      </button>
+      <text class="rv-submit-note">{{submitNote}}</text>
+    </view>
+  </view>
+</view>

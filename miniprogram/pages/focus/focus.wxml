@@ -1,0 +1,177 @@
+<view wx:if="{{hasFocus && !partialOpen}}" class="page focus-page">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+
+  <view class="focus-inner">
+    <view class="focus-top">
+      <button
+        class="icon-btn icon-btn--dark focus-back"
+        bindtap="handleBack"
+        hover-class="btn-hover"
+        aria-label="退出专注，回到今日"
+      >
+        <image class="icon" src="/assets/icons/back-cream.png" mode="aspectFit"></image>
+      </button>
+      <view class="focus-state {{paused ? 'is-paused' : ''}}">
+        <view class="focus-state-dot"></view>
+        <text>{{statusLabel}}</text>
+      </view>
+    </view>
+
+    <view class="focus-heading">
+      <text class="focus-kicker">{{timeRange}}</text>
+      <view class="focus-title">{{title}}</view>
+      <text class="focus-sub">这一块只做这件事。其他的，先放在旁边。</text>
+      <view class="focus-tags">
+        <view class="focus-tag">
+          <view class="focus-tag-dot" style="background: {{categoryColor}};"></view>
+          <text>{{categoryLabel}}</text>
+        </view>
+        <view wx:if="{{energyLabel}}" class="focus-tag">
+          <text>{{energyLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="focus-timer" style="width: {{ringSize}}px; height: {{ringSize}}px;">
+      <canvas class="focus-ring-canvas" canvas-id="focusRing" width="{{ringSize}}" height="{{ringSize}}"></canvas>
+    </view>
+
+    <view class="focus-meta">
+      <text>计划 <text class="focus-meta-strong">{{plannedMin}} 分钟</text></text>
+      <text>已专注 <text class="focus-meta-strong">{{elapsedMin}} 分钟</text></text>
+    </view>
+
+    <view class="focus-actions">
+      <button class="focus-action focus-action-pause" bindtap="togglePause" hover-class="btn-hover">
+        <image
+          class="icon focus-action-icon"
+          src="{{paused ? '/assets/icons/play-cream.png' : '/assets/icons/pause-cream.png'}}"
+          mode="aspectFit"
+        ></image>
+        <text>{{paused ? '继续' : '暂停'}}</text>
+      </button>
+      <button class="focus-action focus-action-done" bindtap="handleDone" hover-class="btn-hover">
+        <image class="icon focus-action-icon" src="/assets/icons/check-cream.png" mode="aspectFit"></image>
+        <text>完成本段</text>
+      </button>
+    </view>
+
+    <button class="focus-partial-btn" bindtap="openPartial" hover-class="btn-hover">
+      部分完成 · 记录实际分钟
+    </button>
+
+    <view class="focus-catcher">
+      <view class="focus-catcher-head">
+        <text class="focus-catcher-title">走神了？先记下来</text>
+        <text class="focus-catcher-note">不计入中断</text>
+      </view>
+      <text class="focus-catcher-sub">想法、待办、情绪都可以。写完继续，不用现在处理。</text>
+
+      <view class="focus-chips">
+        <button
+          wx:for="{{distractionTypes}}"
+          wx:key="value"
+          class="focus-chip {{distractionType === item.value ? 'is-active' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="onTypePick"
+          hover-class="btn-hover"
+        >{{item.label}}</button>
+      </view>
+
+      <view class="focus-catch-form">
+        <input
+          class="focus-catch-input"
+          value="{{distractionText}}"
+          placeholder="刚刚想到…"
+          placeholder-class="focus-catch-placeholder"
+          confirm-type="done"
+          bindinput="onDistractionInput"
+          bindconfirm="onCapture"
+        />
+        <button
+          class="focus-catch-submit {{distractionCanSubmit ? '' : 'is-disabled'}}"
+          disabled="{{!distractionCanSubmit}}"
+          bindtap="onCapture"
+          hover-class="btn-hover"
+        >记下</button>
+      </view>
+
+      <view wx:if="{{distractions.length > 0}}" class="focus-catch-list">
+        <view wx:for="{{distractions}}" wx:key="id" class="focus-catch-item">
+          <view class="focus-catch-item-body">
+            <text class="focus-catch-item-type">{{item.typeLabel}}</text>
+            <text class="focus-catch-item-text">{{item.text}}</text>
+          </view>
+          <button
+            class="focus-catch-promote"
+            data-id="{{item.id}}"
+            bindtap="onPromote"
+            hover-class="btn-hover"
+          >
+            <image class="icon focus-catch-plus" src="/assets/icons/plus-cream.png" mode="aspectFit"></image>
+            <text>转为任务</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <text class="focus-foot">结束后自动记账 · 退出不会丢失计时</text>
+  </view>
+</view>
+
+<view wx:elif="{{!hasFocus}}" class="page focus-page focus-empty-page">
+  <view class="status-bar" style="height: {{statusBarHeight}}px;"></view>
+  <view class="focus-empty-wrap">
+    <view class="focus-empty">
+      <text class="focus-empty-eyebrow">FOCUS</text>
+      <view class="focus-empty-title">现在没有正在专注的块</view>
+      <text class="focus-empty-text">回到今日，在时间轴上点播放键，就能进入一段只做一件事的时间。</text>
+      <button class="focus-empty-btn" bindtap="handleBack" hover-class="btn-hover">回到今日</button>
+    </view>
+  </view>
+</view>
+
+<view wx:if="{{partialOpen}}" class="sheet-mask" bindtap="closePartial">
+  <view class="sheet focus-sheet-panel" catchtap="stopSheetTap">
+    <view class="sheet-grip"></view>
+    <view class="sheet-head">
+      <text class="sheet-title">部分完成</text>
+      <button class="icon-btn focus-sheet-close" bindtap="closePartial" hover-class="btn-hover" aria-label="关闭">
+        <image class="icon" src="/assets/icons/close-ink.png" mode="aspectFit"></image>
+      </button>
+    </view>
+    <scroll-view scroll-y="true" class="sheet-body">
+      <text class="focus-sheet-lead">{{partialHint}}</text>
+      <view class="focus-sheet-presets">
+        <button
+          wx:for="{{presets}}"
+          wx:key="*this"
+          class="focus-sheet-preset {{partialMinutes === item ? 'is-active' : ''}}"
+          data-minutes="{{item}}"
+          bindtap="onPartialPreset"
+          hover-class="btn-hover"
+        >{{item}} 分钟</button>
+      </view>
+      <view class="field">
+        <text class="field-label">实际分钟</text>
+        <input
+          class="input"
+          type="number"
+          value="{{partialValue}}"
+          placeholder="例如 25"
+          placeholder-class="input-placeholder"
+          bindinput="onPartialInput"
+        />
+      </view>
+      <text class="focus-sheet-hint">按真实投入记录，剩余部分之后可以再安排。</text>
+    </scroll-view>
+    <view class="sheet-foot">
+      <button
+        class="btn btn-accent btn-block"
+        disabled="{{!partialValid}}"
+        bindtap="confirmPartial"
+        hover-class="btn-hover"
+      >{{partialButtonText}}</button>
+    </view>
+  </view>
+</view>
