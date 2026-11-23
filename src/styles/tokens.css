@@ -1,0 +1,29 @@
+:root {
+  --paper: #fbf7f0;
+  --paper-2: #f4ede2;
+  --paper-3: #eee5d7;
+  --card: #fffdf8;
+  --ink: #25221d;
+  --ink-2: #423d35;
+  --muted: #81786b;
+  --faint: #a89e90;
+  --line: #ded5c7;
+  --line-soft: #ebe3d6;
+  --accent: #d95b33;
+  --accent-deep: #b8461f;
+  --accent-soft: #f8e2d6;
+  --blue: #48657d;
+  --blue-soft: #e6edf2;
+  --green: #4f6b4f;
+  --green-soft: #e5ecdf;
+  --danger: #b34a30;
+  --danger-soft: #f9e0d8;
+  --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-card: 18px;
+  --radius-lg: 24px;
+  --shadow-card: 0 8px 24px rgba(50, 42, 31, 0.05);
+  --shadow-float: 0 20px 50px rgba(40, 32, 20, 0.16);
+}

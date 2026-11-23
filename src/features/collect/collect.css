@@ -1,0 +1,286 @@
+.collect {
+  display: flex;
+  flex-direction: column;
+}
+
+.collect-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.collect-head-text {
+  min-width: 0;
+}
+
+.collect-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.collect-title-row .title-xl {
+  font-size: 27px;
+}
+
+.collect-count {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--muted);
+  font-size: 9.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.collect-sub {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.icon-btn.collect-add {
+  width: 40px;
+  height: 40px;
+  margin-top: 2px;
+}
+
+.collect-filters {
+  margin: 16px 0 12px;
+}
+
+.collect-filters .chip {
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 11px;
+}
+
+.collect-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.collect-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 2px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: var(--card);
+  transition: border-color 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+}
+
+.collect-row:hover {
+  border-color: var(--line);
+}
+
+.collect-row.is-done {
+  opacity: 0.58;
+  background: rgba(255, 253, 248, 0.55);
+}
+
+.collect-check {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.collect-check-dot {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: transparent;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.collect-check:hover .collect-check-dot {
+  border-color: var(--ink);
+}
+
+.collect-row.is-done .collect-check-dot {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.collect-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 7px 0 7px 2px;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.collect-open-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.collect-title {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.collect-open:hover .collect-title {
+  color: var(--accent-deep);
+}
+
+.collect-row.is-done .collect-title {
+  color: var(--faint);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+
+.collect-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--faint);
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+
+.collect-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+}
+
+.collect-sep {
+  color: var(--line);
+}
+
+.collect-time {
+  flex: none;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--muted);
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.collect-row.is-done .collect-time {
+  color: var(--faint);
+}
+
+.collect-inline-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  border: 1px dashed var(--line);
+  border-radius: 13px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.collect-inline-add:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.collect-empty {
+  margin-top: 2px;
+}
+
+.collect-empty .btn {
+  min-height: 42px;
+}
+
+.collect-cta {
+  position: sticky;
+  bottom: -1px;
+  margin-top: auto;
+  padding: 16px 0 2px;
+  background: linear-gradient(to top, var(--paper) 72%, rgba(251, 247, 240, 0));
+}
+
+.collect-cta .btn--block {
+  min-height: 48px;
+}
+
+.collect-tip {
+  margin: 8px 0 0;
+  color: var(--faint);
+  font-size: 9.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.collect-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.collect-form-hint {
+  margin: 0;
+  color: var(--faint);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.collect-sheet-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.collect-sheet-actions .btn {
+  min-height: 48px;
+}
+
+.collect-sheet-actions .collect-delete {
+  flex: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+.collect-delete.is-confirming {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+
+.collect-sheet-actions .collect-save {
+  flex: 1;
+  border-radius: 14px;
+  font-size: 14px;
+}

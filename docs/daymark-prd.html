@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="日刻 Daymark：面向自由职业者与创作者的日内规划微信小程序 PRD，含竞品研究、容量模型与 8 屏可交互原型。">
+<title>日刻 Daymark · 日内规划小程序 PRD 与可交互原型</title>
+<style>
+:root{
+  --bg:#f6f1e8;
+  --paper:#fbf7f0;
+  --paper-2:#f2ebdf;
+  --card:#fffdf8;
+  --ink:#25221d;
+  --ink-2:#423d35;
+  --muted:#81786b;
+  --faint:#a89e90;
+  --line:#ded5c7;
+  --line-soft:#ebe3d6;
+  --accent:#d95b33;
+  --accent-deep:#b8461f;
+  --accent-soft:#f8e2d6;
+  --blue:#48657d;
+  --blue-soft:#e6edf2;
+  --green:#4f6b4f;
+  --green-soft:#e5ecdf;
+  --danger:#b34a30;
+  --danger-soft:#f9e0d8;
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC",Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif;
+  --shadow:0 18px 50px rgba(50,42,31,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.65;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(900px 500px at 12% -5%,rgba(217,91,51,.07),transparent 60%),
+    radial-gradient(800px 600px at 100% 12%,rgba(72,101,125,.06),transparent 55%);
+}
+a{color:inherit}
+button{font-family:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.topbar{
+  position:sticky;top:0;z-index:60;
+  background:rgba(246,241,232,.86);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
+.topbar-inner{height:62px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:.01em}
+.brand-mark{
+  width:27px;height:27px;border-radius:9px;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;font-family:var(--serif);font-size:13px;line-height:1;
+  padding-top:1px;
+}
+.brand small{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.08em;margin-left:2px}
+.doc-nav{display:flex;align-items:center;gap:24px;font-size:12.5px;color:var(--muted)}
+.doc-nav a{text-decoration:none;transition:color .18s}
+.doc-nav a:hover{color:var(--ink)}
+.doc-nav .ver{
+  border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:10.5px;
+  letter-spacing:.06em;color:var(--ink-2);background:rgba(255,253,248,.6)
+}
+.hero{padding:76px 0 58px;display:grid;grid-template-columns:1.18fr .82fr;gap:56px;align-items:center}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--accent-deep);
+  text-transform:uppercase;display:flex;align-items:center;gap:10px
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--accent);display:block}
+.hero h1{
+  font-family:var(--serif);font-size:clamp(46px,5.6vw,76px);line-height:1.06;
+  letter-spacing:-.025em;margin:20px 0 22px;font-weight:600;
+}
+.hero h1 em{font-style:normal;position:relative;white-space:nowrap}
+.hero h1 em::after{
+  content:"";position:absolute;left:0;right:0;bottom:4px;height:10px;
+  background:var(--accent-soft);z-index:-1;border-radius:2px;
+}
+.hero-lead{font-size:15.5px;line-height:1.85;color:var(--ink-2);max-width:540px;margin:0 0 26px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+.meta-chip{
+  font-size:11.5px;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;
+  padding:5px 11px;background:rgba(255,253,248,.65)
+}
+.meta-chip b{font-weight:600;color:var(--ink)}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:999px;padding:11px 20px;font-size:13px;font-weight:500;
+  border:1px solid transparent;cursor:pointer;text-decoration:none;transition:.18s;
+}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-dark:hover{background:#0f0e0c;transform:translateY(-1px)}
+.btn-line{border-color:var(--line);color:var(--ink);background:transparent}
+.btn-line:hover{border-color:var(--ink)}
+.btn-accent{background:var(--accent);color:#fff}
+.hero-board{
+  background:var(--card);border:1px solid var(--line);border-radius:24px;
+  padding:26px 26px 22px;box-shadow:var(--shadow);transform:rotate(1.4deg);
+  position:relative;max-width:390px;justify-self:end;width:100%;
+}
+.hero-board::before{
+  content:"";position:absolute;top:-9px;left:34px;width:64px;height:18px;
+  background:rgba(217,91,51,.16);border:1px solid rgba(217,91,51,.22);border-radius:3px;
+  transform:rotate(-3deg)
+}
+.hb-top{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:16px}
+.hb-stamp{border:1px solid var(--accent);color:var(--accent-deep);border-radius:5px;padding:2px 7px;font-size:10px;letter-spacing:.08em}
+.hb-title{font-family:var(--serif);font-size:21px;margin-bottom:18px;letter-spacing:-.01em}
+.hb-list{display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+.hb-row{display:flex;align-items:center;gap:11px;font-size:12.5px;color:var(--ink-2)}
+.hb-row i{
+  font-style:normal;font-family:var(--serif);font-size:10px;color:var(--accent-deep);
+  width:20px;height:20px;border-radius:50%;border:1px solid var(--accent-soft);
+  display:grid;place-items:center;background:var(--accent-soft);flex:none
+}
+.hb-row span:last-child{margin-left:auto;font-size:10.5px;color:var(--faint)}
+.hb-cap{margin-bottom:6px}
+.hb-cap-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-bottom:6px}
+.hb-bar{height:6px;background:var(--paper-2);border-radius:99px;overflow:hidden}
+.hb-bar i{display:block;height:100%;width:79%;background:var(--accent);border-radius:99px}
+.hb-note{font-size:10.5px;color:var(--muted);margin-top:14px;padding-top:13px;border-top:1px dashed var(--line)}
+section{padding:66px 0;border-top:1px solid var(--line-soft);position:relative;z-index:1}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:34px}
+.sec-kicker{font-size:10.5px;letter-spacing:.18em;color:var(--accent-deep);font-weight:600;margin-bottom:8px}
+.sec-head h2{font-family:var(--serif);font-size:clamp(28px,3.4vw,40px);line-height:1.2;letter-spacing:-.02em;margin:0;font-weight:600}
+.sec-lead{max-width:480px;font-size:13px;line-height:1.8;color:var(--muted);margin:0}
+.note{font-size:11.5px;color:var(--faint);margin-top:14px;line-height:1.7}
+.note a{color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.note a:hover{color:var(--accent-deep);text-decoration-color:var(--accent)}
+.comp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.comp-card{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:18px;
+  padding:20px;transition:.2s;position:relative;overflow:hidden
+}
+.comp-card:hover{border-color:var(--line);transform:translateY(-2px);box-shadow:0 12px 30px rgba(50,42,31,.06)}
+.comp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}
+.comp-name{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.comp-tag{font-size:9.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 7px;white-space:nowrap;margin-top:2px}
+.comp-desc{font-size:12px;color:var(--ink-2);line-height:1.72;margin:0 0 12px;min-height:61px}
+.comp-block{font-size:11.5px;line-height:1.65;margin-bottom:8px}
+.comp-block b{display:block;font-size:9.5px;letter-spacing:.12em;color:var(--faint);font-weight:600;margin-bottom:2px}
+.comp-block span{color:var(--ink-2)}
+.comp-block.gap span{color:var(--muted)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:18px;background:var(--card);margin-top:22px}
+table{border-collapse:collapse;width:100%;min-width:820px}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line-soft);font-size:12px;vertical-align:middle}
+th{
+  font-size:10px;letter-spacing:.1em;color:var(--muted);font-weight:600;
+  background:var(--paper);position:sticky;top:0;white-space:nowrap
+}
+td:first-child{font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr.us td{background:rgba(248,226,214,.28)}
+.mark{display:inline-flex;align-items:center;justify-content:center;min-width:38px;font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid transparent}
+.mark.yes{background:var(--green-soft);color:var(--green);border-color:#d5e0cc}
+.mark.part{background:var(--paper-2);color:var(--muted);border-color:var(--line)}
+.mark.no{background:transparent;color:#b3a99b;border-color:var(--line-soft)}
+.research-split{display:grid;grid-template-columns:.95fr 1.05fr;gap:26px;margin-top:26px}
+.insight-list{display:flex;flex-direction:column;gap:12px}
+.insight{
+  display:flex;gap:14px;padding:16px 18px;background:var(--card);
+  border:1px solid var(--line-soft);border-radius:16px
+}
+.insight-num{font-family:var(--serif);font-size:13px;color:var(--accent-deep);flex:none;padding-top:1px}
+.insight p{margin:0;font-size:12.5px;line-height:1.75;color:var(--ink-2)}
+.insight b{font-weight:600;color:var(--ink)}
+.matrix-card{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;padding:20px 20px 16px}
+.matrix-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.matrix-head span{font-size:10px;letter-spacing:.1em;color:var(--faint);font-weight:600}
+.matrix{position:relative;height:320px;margin:14px 10px 26px 34px;border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+.matrix::before,.matrix::after{content:"";position:absolute;background:var(--line-soft)}
+.matrix::before{left:50%;top:0;bottom:0;width:1px}
+.matrix::after{top:50%;left:0;right:0;height:1px}
+.matrix-axis{position:absolute;font-size:9.5px;color:var(--faint);letter-spacing:.06em}
+.axl{left:-34px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left center;white-space:nowrap}
+.axr{right:0;bottom:-22px}
+.axt{left:0;top:-20px}
+.dot{position:absolute;transform:translate(-50%,-50%);font-size:9.5px;color:var(--ink-2);white-space:nowrap;display:flex;align-items:center;gap:5px}
+.dot i{width:9px;height:9px;border-radius:50%;background:var(--ink);display:block;flex:none;box-shadow:0 0 0 3px rgba(37,34,29,.08)}
+.dot.us i{background:var(--accent);box-shadow:0 0 0 4px rgba(217,91,51,.16)}
+.dot.us{font-weight:600;color:var(--accent-deep)}
+.matrix-note{font-size:11px;line-height:1.65;color:var(--muted);margin:0}
+.persona-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:start}
+.persona{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:24px;
+  position:relative;overflow:hidden
+}
+.persona::after{
+  content:"自由接单 / 无固定会议";position:absolute;right:-34px;top:24px;transform:rotate(38deg);
+  font-size:9px;letter-spacing:.08em;color:var(--accent-deep);background:var(--accent-soft);
+  padding:4px 40px;border:1px solid rgba(217,91,51,.18)
+}
+.persona-name{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
+.persona-name b{font-family:var(--serif);font-size:26px;font-weight:600}
+.persona-name span{font-size:11px;color:var(--muted)}
+.persona-role{font-size:12px;color:var(--ink-2);margin-bottom:17px}
+.persona-day{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:7px}
+.persona-day li{display:flex;gap:10px;font-size:11.5px;color:var(--muted);line-height:1.55}
+.persona-day time{font-family:var(--serif);color:var(--ink-2);flex:none;width:40px}
+.quote{
+  font-family:var(--serif);font-size:15px;line-height:1.7;color:var(--ink);
+  border-left:2px solid var(--accent);padding-left:14px;margin:0 0 10px
+}
+.quote-meta{font-size:10px;color:var(--faint);margin:0}
+.jobs{display:flex;flex-direction:column;gap:12px}
+.job{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:18px 20px}
+.job b{display:block;font-size:9.5px;letter-spacing:.13em;color:var(--faint);font-weight:600;margin-bottom:6px}
+.job p{margin:0;font-size:13px;line-height:1.75;color:var(--ink-2)}
+.pain-table{margin-top:18px;border:1px solid var(--line-soft);border-radius:18px;background:var(--card);overflow:hidden}
+.pain-row{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:0;border-bottom:1px solid var(--line-soft)}
+.pain-row:last-child{border-bottom:none}
+.pain-row>div{padding:14px 18px;font-size:12px;line-height:1.65}
+.pain-row.head>div{background:var(--paper);font-size:9.5px;letter-spacing:.11em;color:var(--muted);font-weight:600;padding:10px 18px}
+.pain-row>div+div{border-left:1px solid var(--line-soft)}
+.pain-row .pain{color:var(--ink)}
+.pain-row .mech{color:var(--ink-2)}
+.pain-row .ui{color:var(--muted);font-size:11.5px}
+.position-line{
+  background:var(--ink);color:var(--paper);border-radius:24px;padding:34px 36px;
+  display:grid;grid-template-columns:1.4fr .6fr;gap:30px;align-items:center;margin-bottom:18px
+}
+.position-line .pl-kicker{font-size:10px;letter-spacing:.16em;color:#bdb2a2;font-weight:600;margin-bottom:10px}
+.position-line p{font-family:var(--serif);font-size:clamp(20px,2.4vw,27px);line-height:1.55;margin:0;letter-spacing:.01em}
+.position-line em{font-style:normal;color:#f0a487}
+.pl-side{border-left:1px solid rgba(251,247,240,.18);padding-left:28px}
+.pl-side span{display:block;font-size:10px;letter-spacing:.12em;color:#bdb2a2;margin-bottom:8px;font-weight:600}
+.pl-side b{font-size:13px;line-height:1.7;font-weight:400;color:#f1e9dc}
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.principle{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;padding:20px}
+.principle i{font-family:var(--serif);font-style:normal;font-size:11px;color:var(--accent-deep);letter-spacing:.06em}
+.principle h4{font-size:15px;margin:8px 0 7px;font-weight:600;letter-spacing:-.01em}
+.principle p{margin:0;font-size:12px;line-height:1.75;color:var(--muted)}
+.non-goals{margin-top:14px;padding:16px 20px;border:1px dashed var(--line);border-radius:16px;font-size:12px;color:var(--muted);line-height:1.8}
+.non-goals b{color:var(--ink-2);font-weight:600}
+.ia-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px}
+.ia-col{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:16px}
+.ia-col h4{margin:0 0 4px;font-size:13px;display:flex;align-items:center;gap:8px}
+.ia-col h4 i{font-style:normal;font-family:var(--serif);font-size:10px;color:var(--accent-deep);width:20px;height:20px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+.ia-col p{margin:0 0 10px;font-size:10px;color:var(--faint)}
+.ia-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ia-col li{font-size:11px;color:var(--ink-2);padding-left:10px;position:relative}
+.ia-col li::before{content:"";position:absolute;left:0;top:.62em;width:3px;height:3px;border-radius:50%;background:var(--faint)}
+.global-layer{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:10.5px;color:var(--muted)}
+.global-layer b{font-size:9.5px;letter-spacing:.1em;color:var(--faint);font-weight:600;margin-right:2px}
+.global-layer span{border:1px solid var(--line-soft);background:var(--card);border-radius:999px;padding:4px 10px;color:var(--ink-2)}
+.proto-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:26px}
+.proto-hint{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.proto-hint i{width:7px;height:7px;border-radius:50%;background:var(--accent);display:block;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.proto-grid{display:grid;grid-template-columns:410px minmax(0,1fr);gap:40px;align-items:start}
+.phone-col{position:sticky;top:88px}
+.phone-stage{display:flex;justify-content:center;padding:4px 0 10px}
+.phone{
+  width:390px;height:844px;background:#191815;border-radius:55px;padding:9px;
+  box-shadow:0 44px 90px rgba(38,31,21,.24),inset 0 0 0 1px rgba(255,255,255,.09);
+  position:relative;flex:none;transition:.2s
+}
+.phone::after{
+  content:"";position:absolute;left:50%;bottom:15px;transform:translateX(-50%);
+  width:118px;height:4px;border-radius:3px;background:rgba(255,255,255,.3);z-index:30;pointer-events:none
+}
+.phone-screen{
+  height:100%;background:var(--paper);border-radius:47px;overflow:hidden;
+  display:flex;flex-direction:column;position:relative
+}
+.dynamic-island{
+  position:absolute;top:9px;left:50%;transform:translateX(-50%);
+  width:110px;height:27px;border-radius:20px;background:#0b0a09;z-index:25
+}
+.statusbar{
+  height:46px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 25px 5px;font-size:11.5px;font-weight:600;letter-spacing:.02em;z-index:24;color:var(--ink)
+}
+.status-icons{display:flex;align-items:center;gap:5px}
+.status-icons svg{display:block}
+.signal{display:flex;align-items:flex-end;gap:1.5px;height:9px}
+.signal i{display:block;width:2.5px;background:currentColor;border-radius:1px}
+.signal i:nth-child(1){height:3px}
+.signal i:nth-child(2){height:5px}
+.signal i:nth-child(3){height:7px}
+.signal i:nth-child(4){height:9px}
+.battery{width:20px;height:10px;border:1px solid currentColor;border-radius:3px;padding:1px;position:relative}
+.battery::after{content:"";position:absolute;right:-3px;top:2.5px;width:1.5px;height:4px;background:currentColor;border-radius:0 1px 1px 0}
+.battery i{display:block;height:100%;width:76%;background:currentColor;border-radius:1px}
+.app{flex:1;display:flex;flex-direction:column;min-height:0}
+.app-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;position:relative;background:var(--paper);scrollbar-width:none}
+.app-body::-webkit-scrollbar{width:0}
+.screen{display:none;padding:5px 18px 26px;min-height:100%}
+.screen.active{display:block;animation:screenIn .24s ease}
+.screen[data-screen^="plan"].active{display:flex;flex-direction:column}
+.screen[data-screen^="plan"] .bottom-cta{position:static;margin-top:auto}
+@keyframes screenIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.app-body::after{content:"";display:block;height:8px}
+.tabbar{
+  flex:none;height:68px;display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--line-soft);background:rgba(255,253,248,.94);
+  padding:5px 4px 10px;transition:.2s
+}
+.phone.is-immersive .tabbar{display:none}
+.tab{
+  border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;font-size:9.5px;color:var(--faint);cursor:pointer;letter-spacing:.02em;padding:0
+}
+.tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tab.active{color:var(--ink)}
+.tab.active svg{stroke:var(--accent-deep)}
+.toast{
+  position:absolute;left:50%;bottom:92px;transform:translate(-50%,10px);
+  background:rgba(37,34,29,.94);color:var(--paper);font-size:11.5px;line-height:1.5;
+  padding:9px 15px;border-radius:12px;max-width:min(280px,calc(100% - 32px));text-align:center;
+  opacity:0;pointer-events:none;transition:.25s;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.18)
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.phone.is-immersive .toast{bottom:104px}
+.dayline{display:flex;align-items:center;justify-content:space-between;margin:2px 0 10px;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+.streak-pill{background:var(--accent-soft);color:var(--accent-deep);border-radius:999px;padding:3px 8px;font-size:9.5px;font-weight:600;letter-spacing:.02em}
+.today-head h3{font-family:var(--serif);font-size:27px;font-weight:600;letter-spacing:-.02em;margin:0 0 3px;line-height:1.25}
+.today-head p{margin:0 0 16px;font-size:12px;color:var(--muted)}
+.cap-card{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:18px;
+  padding:14px 14px 12px;margin-bottom:20px;box-shadow:0 6px 18px rgba(50,42,31,.04)
+}
+.cap-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:3px}
+.cap-lead{font-size:13px;font-weight:600}
+.cap-sub{font-size:10px;color:var(--muted)}
+.cap-warn{font-size:10.5px;font-weight:600;color:var(--danger);white-space:nowrap}
+.cap-warn.safe{color:var(--green)}
+.cap-bar{height:7px;background:var(--paper-2);border-radius:99px;overflow:hidden;display:flex;margin:10px 0 7px}
+.cap-fill{display:block;height:100%;background:var(--accent);border-radius:99px 0 0 99px;transition:.35s;width:81%}
+.cap-fill.safe{background:var(--green);border-radius:99px}
+.cap-over{display:block;height:100%;background:repeating-linear-gradient(45deg,#c95032,#c95032 3px,#e06745 3px,#e06745 6px);width:19%;transition:.35s}
+.cap-scale{display:flex;justify-content:space-between;font-size:9px;color:var(--faint);letter-spacing:.02em}
+.cap-note{
+  margin-top:10px;padding:8px 10px;background:var(--danger-soft);border-radius:9px;
+  font-size:10.5px;line-height:1.55;color:#7f3c29;transition:.2s
+}
+.cap-note.safe{background:var(--green-soft);color:#3f573f}
+.cap-actions{display:flex;gap:7px;margin-top:10px}
+.mini-btn{
+  border:1px solid var(--line);background:transparent;border-radius:999px;
+  font-size:10.5px;color:var(--ink-2);padding:6px 11px;cursor:pointer;transition:.18s
+}
+.mini-btn:hover{border-color:var(--ink)}
+.mini-btn.solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.mini-btn:disabled{opacity:.45;cursor:default}
+.sec-label{display:flex;align-items:center;justify-content:space-between;margin:0 0 9px;font-size:10px;letter-spacing:.11em;color:var(--faint);font-weight:600;text-transform:uppercase}
+.sec-label span{letter-spacing:.02em;color:var(--muted);font-weight:500;font-size:9.5px}
+.sec-label button{border:0;background:none;color:var(--accent-deep);font-size:10px;cursor:pointer;letter-spacing:0;padding:0}
+.mit-list{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
+.mit{
+  display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:13px;
+  background:var(--card);border:1px solid var(--line-soft);transition:.2s
+}
+.mit.current{border-color:#e7b7a4;background:#fffaf6;box-shadow:inset 2px 0 0 var(--accent)}
+.mit-check{
+  width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line);
+  flex:none;display:grid;place-items:center;background:transparent;cursor:pointer;padding:0
+}
+.mit.done .mit-check{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.mit.done .mit-check::after{content:"";width:7px;height:4px;border-left:1.5px solid;border-bottom:1.5px solid;transform:rotate(-45deg) translate(1px,-1px)}
+.mit-body{flex:1;min-width:0}
+.mit-title{font-size:11.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mit-meta{font-size:9.5px;color:var(--faint);margin-top:1px}
+.mit.done .mit-title{text-decoration:line-through;color:var(--faint);font-weight:400}
+.mit-side{font-size:9.5px;color:var(--muted);flex:none;display:flex;align-items:center;gap:6px}
+.live-tag{color:var(--accent-deep);background:var(--accent-soft);border-radius:999px;padding:2px 6px;font-size:8.5px;font-weight:600}
+.timeline{margin-bottom:8px}
+.tl-canvas{
+  position:relative;height:650px;margin-left:40px;border-left:1px solid var(--line-soft);
+  background:repeating-linear-gradient(to bottom,transparent 0 51px,var(--line-soft) 51px 52px)
+}
+.tl-label{position:absolute;left:-40px;width:32px;text-align:right;font-size:9px;color:var(--faint);transform:translateY(-50%);font-variant-numeric:tabular-nums}
+.tl-block{
+  position:absolute;left:7px;right:0;border-radius:12px;padding:7px 9px;overflow:hidden;
+  border:1px solid transparent;transition:.2s
+}
+.tl-block b{display:block;font-size:10.5px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-block small{display:block;font-size:8.5px;color:var(--muted);line-height:1.4;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-block.deep{background:#f8e3d7;border-color:#eec9b8}
+.tl-block.deep b{color:#7c351c}
+.tl-block.meet{background:var(--blue-soft);border-color:#d3e0e9}
+.tl-block.meet b{color:#314f66}
+.tl-block.admin{background:#f0e9dd;border-color:#e3d8c7}
+.tl-block.admin b{color:#5d5447}
+.tl-block.rest{background:transparent;border:1px dashed #d9cfbf}
+.tl-block.rest b{color:#8a8173}
+.tl-block.buffer{
+  background:repeating-linear-gradient(45deg,#fcf8f1,#fcf8f1 7px,#f5eee2 7px,#f5eee2 14px);
+  border:1px dashed #ddd3c3
+}
+.tl-block.buffer b{color:#908777;font-weight:500}
+.tl-block.ritual{background:#eceee9;border-color:#dbe0d7}
+.tl-block.ritual b{color:#4d5b4c}
+.tl-block.current{box-shadow:inset 3px 0 0 var(--accent);border-color:#e4b29d;background:#fff6ef;padding-right:38px}
+.tl-block.optional{opacity:1;transition:opacity .3s,transform .3s}
+.tl-block.optional.removed{opacity:0;transform:translateX(10px);pointer-events:none}
+.tl-play{
+  position:absolute;right:7px;top:8px;
+  width:24px;height:24px;border-radius:50%;background:var(--accent);border:0;color:#fff;
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 10px rgba(217,91,51,.28);padding:0
+}
+.tl-play svg{width:9px;height:9px;fill:currentColor;margin-left:1px}
+.tl-now{position:absolute;left:0;right:0;height:0;border-top:1.5px solid var(--accent);z-index:3;pointer-events:none}
+.tl-now::before{content:"";position:absolute;left:-4px;top:-5px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.tl-now span{
+  position:absolute;right:2px;top:-17px;background:var(--accent);color:#fff;
+  font-size:8px;letter-spacing:.03em;padding:1px 5px;border-radius:4px;font-weight:600
+}
+.add-block{
+  width:100%;border:1px dashed var(--line);border-radius:13px;background:transparent;
+  padding:10px;color:var(--muted);font-size:11px;cursor:pointer;margin-top:4px
+}
+.add-block:hover{border-color:var(--ink);color:var(--ink)}
+.plan-top{display:flex;align-items:center;justify-content:space-between;margin:6px 0 2px}
+.icon-btn{
+  width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);
+  display:grid;place-items:center;cursor:pointer;color:var(--ink);padding:0
+}
+.icon-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.plan-kicker{font-size:9.5px;letter-spacing:.12em;color:var(--faint);font-weight:600}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:16px 0 20px}
+.step{border-top:2px solid var(--line);padding-top:6px;font-size:9px;color:var(--faint);letter-spacing:.02em}
+.step.active{border-color:var(--accent);color:var(--accent-deep);font-weight:600}
+.step.done{border-color:var(--ink);color:var(--ink-2)}
+.plan-title{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.3;margin:0 0 5px}
+.plan-sub{font-size:11.5px;color:var(--muted);line-height:1.65;margin:0 0 18px}
+.quick-add{display:flex;gap:7px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:5px 5px 5px 12px;margin-bottom:14px}
+.quick-add input{flex:1;border:0;background:transparent;font-size:11.5px;font-family:inherit;color:var(--ink);outline:none;min-width:0;padding:6px 0}
+.quick-add input::placeholder{color:var(--faint)}
+.quick-add button{
+  border:0;background:var(--ink);color:var(--paper);width:28px;height:28px;border-radius:9px;
+  font-size:18px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0
+}
+.dump-list{display:flex;flex-direction:column;margin-bottom:14px}
+.dump-item{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px dashed var(--line-soft);font-size:11.5px}
+.dump-item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dump-item em{font-style:normal;font-size:9.5px;color:var(--muted);background:var(--paper-2);border-radius:999px;padding:2px 7px;flex:none}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.chip{
+  border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 10px;
+  font-size:10px;color:var(--ink-2);cursor:pointer;transition:.18s;font-family:inherit
+}
+.chip:hover{border-color:var(--ink)}
+.chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip.accent.active{background:var(--accent);border-color:var(--accent)}
+.bottom-cta{position:sticky;bottom:0;padding:16px 0 2px;background:linear-gradient(to top,var(--paper) 68%,rgba(251,247,240,0))}
+.btn-block{
+  width:100%;border:0;border-radius:14px;background:var(--ink);color:var(--paper);
+  padding:13px 16px;font-size:12.5px;font-weight:500;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;gap:8px;transition:.18s
+}
+.btn-block:hover{background:#0f0e0c}
+.btn-block.accent{background:var(--accent)}
+.btn-block.accent:hover{background:var(--accent-deep)}
+.btn-block svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.plan-tip{font-size:9.5px;color:var(--faint);text-align:center;margin:9px 0 0;line-height:1.5}
+.pick-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.pick-row{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line-soft);
+  border-radius:14px;background:var(--card);cursor:pointer;transition:.18s
+}
+.pick-row.sel{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:#fffefa}
+.pick-box{
+  width:18px;height:18px;border-radius:6px;border:1.5px solid var(--line);flex:none;
+  display:grid;place-items:center;color:transparent;font-size:10px
+}
+.pick-row.sel .pick-box{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.pick-main{flex:1;min-width:0}
+.pick-main b{display:block;font-size:11.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick-main small{font-size:9px;color:var(--faint);display:block;margin-top:1px}
+.pick-rank{font-size:8.5px;color:var(--accent-deep);background:var(--accent-soft);padding:2px 6px;border-radius:999px;flex:none;opacity:0}
+.pick-row.sel .pick-rank{opacity:1}
+.later-box{
+  border:1px dashed var(--line);border-radius:12px;padding:10px 12px;
+  font-size:10px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-bottom:4px
+}
+.later-box b{color:var(--ink-2);font-weight:500}
+.plan3-cap{background:var(--card);border:1px solid var(--line-soft);border-radius:15px;padding:13px 14px;margin-bottom:14px}
+.plan3-cap .row{display:flex;justify-content:space-between;align-items:baseline}
+.plan3-cap .row b{font-size:12px}
+.plan3-cap .row span{font-size:9.5px;color:var(--muted)}
+.plan3-bar{height:6px;background:var(--paper-2);border-radius:99px;overflow:hidden;margin:9px 0 6px}
+.plan3-bar i{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .4s}
+.plan3-meta{display:flex;justify-content:space-between;font-size:8.5px;color:var(--faint)}
+.smart-empty{
+  border:1px dashed var(--line);border-radius:16px;padding:22px 16px;text-align:center;
+  background:rgba(255,253,248,.5);margin-bottom:6px
+}
+.smart-empty b{display:block;font-size:12px;margin-bottom:4px}
+.smart-empty p{margin:0 0 13px;font-size:10px;color:var(--muted);line-height:1.6}
+.sched-preview{display:none}
+.sched-preview.show{display:block}
+.sched-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.sched-row{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:11px;background:var(--card);border:1px solid var(--line-soft)}
+.sched-row time{font-size:9px;color:var(--muted);font-variant-numeric:tabular-nums;flex:none;width:70px}
+.sched-row .bar{width:3px;height:22px;border-radius:2px;flex:none}
+.sched-row b{font-size:10.5px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sched-row em{font-style:normal;font-size:8.5px;color:var(--faint);flex:none}
+.screen[data-screen="focus"]{padding:0;background:#211f1a;color:#f5efe4;min-height:100%}
+.focus-inner{padding:10px 22px 26px;min-height:100%;display:flex;flex-direction:column}
+.focus-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.focus-top .icon-btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);color:#f5efe4}
+.focus-state{font-size:9px;letter-spacing:.12em;color:#c9bda9;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:4px 9px;display:flex;align-items:center;gap:6px}
+.focus-state i{width:5px;height:5px;border-radius:50%;background:#e98a63;display:block}
+.focus-kicker{font-size:9.5px;letter-spacing:.13em;color:#a89b86;margin-bottom:5px;font-weight:600}
+.focus-title{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.45;margin:0 0 4px;letter-spacing:.01em}
+.focus-sub{font-size:10px;color:#a89b86;margin:0}
+.ring{
+  width:214px;height:214px;border-radius:50%;margin:26px auto 8px;display:grid;place-items:center;
+  background:conic-gradient(var(--accent) calc(var(--p,53) * 1%),rgba(255,255,255,.1) 0);
+  position:relative
+}
+.ring-inner{width:188px;height:188px;border-radius:50%;background:#211f1a;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-time{font-family:var(--serif);font-size:43px;line-height:1;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.ring-label{font-size:9px;letter-spacing:.13em;color:#a89b86;margin-top:7px}
+.focus-meta{display:flex;justify-content:center;gap:20px;font-size:9.5px;color:#a89b86;margin-bottom:2px}
+.focus-meta b{color:#e6dccb;font-weight:500}
+.focus-actions{display:flex;gap:9px;margin:18px 0 24px}
+.focus-actions button{
+  flex:1;border-radius:13px;padding:12px;font-size:11.5px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;font-weight:500;font-family:inherit;border:1px solid transparent
+}
+.focus-pause{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#f5efe4}
+.focus-done{background:var(--accent);color:#fff}
+.focus-actions svg{width:12px;height:12px;fill:currentColor}
+.park-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px}
+.park-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.park-head b{font-size:11.5px;font-weight:500}
+.park-head span{font-size:9px;color:#a89b86}
+.park-sub{font-size:9.5px;color:#a89b86;margin:0 0 10px;line-height:1.55}
+.park-chips{display:flex;gap:6px;margin-bottom:9px}
+.park-chips button{
+  border:1px solid rgba(255,255,255,.16);background:transparent;color:#ddd2c0;
+  border-radius:999px;padding:4px 9px;font-size:9px;cursor:pointer;font-family:inherit
+}
+.park-chips button:hover{background:rgba(255,255,255,.08)}
+.park-input{display:flex;gap:6px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:4px 4px 4px 10px}
+.park-input input{flex:1;border:0;background:transparent;color:#f5efe4;font-size:10px;font-family:inherit;outline:none;min-width:0}
+.park-input input::placeholder{color:#8f8371}
+.park-input button{border:0;background:rgba(255,255,255,.12);color:#f5efe4;border-radius:7px;font-size:9px;padding:5px 9px;cursor:pointer;font-family:inherit}
+.park-list{display:flex;flex-direction:column;gap:5px;margin-top:9px}
+.park-list span{font-size:9.5px;color:#c6b9a5;padding-left:10px;position:relative;line-height:1.5}
+.park-list span::before{content:"";position:absolute;left:0;top:.58em;width:3px;height:3px;border-radius:50%;background:#e98a63}
+.focus-foot{font-size:8.5px;color:#8f8371;text-align:center;margin:auto 0 0;padding-top:18px;line-height:1.5}
+.review-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.review-head h3{font-family:var(--serif);font-size:24px;margin:0 0 2px;font-weight:600;letter-spacing:-.01em}
+.review-head p{margin:0;font-size:10px;color:var(--muted)}
+.score-card{background:var(--ink);color:var(--paper);border-radius:18px;padding:17px 18px 15px;margin-bottom:16px}
+.score-top{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.score-big{font-family:var(--serif);font-size:38px;line-height:1;letter-spacing:-.02em}
+.score-label{font-size:9px;color:#bdb2a2;letter-spacing:.05em;margin-bottom:3px}
+.score-tag{font-size:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px 8px;color:#e8dfd0}
+.score-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.score-stats div{display:flex;flex-direction:column;gap:2px}
+.score-stats span{font-size:8.5px;color:#a99d8c}
+.score-stats b{font-size:11.5px;font-weight:500;font-family:var(--serif);letter-spacing:.01em}
+.review-block{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:14px;margin-bottom:12px}
+.review-block h4{margin:0 0 10px;font-size:10px;letter-spacing:.08em;color:var(--faint);font-weight:600}
+.cmp-row{margin-bottom:9px}
+.cmp-row:last-child{margin-bottom:0}
+.cmp-top{display:flex;justify-content:space-between;font-size:9.5px;margin-bottom:3px;color:var(--ink-2)}
+.cmp-top em{font-style:normal;color:var(--faint);font-variant-numeric:tabular-nums}
+.cmp-track{height:8px;background:var(--paper-2);border-radius:99px;position:relative;overflow:hidden}
+.cmp-plan{position:absolute;left:0;top:0;bottom:0;background:#e9d3c7;border-radius:99px}
+.cmp-actual{position:absolute;left:0;top:2px;bottom:2px;background:var(--accent);border-radius:99px}
+.cmp-legend{display:flex;gap:12px;font-size:8px;color:var(--faint);margin-top:9px}
+.cmp-legend i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.reason-chips{display:flex;flex-wrap:wrap;gap:5px}
+.reason-chips .chip{font-size:9.5px;padding:5px 9px}
+.suggest{
+  background:var(--accent-soft);border:1px solid #edc8b6;border-radius:14px;padding:13px;
+  margin-bottom:12px;transition:.25s
+}
+.suggest b{font-size:11px;display:block;margin-bottom:3px}
+.suggest p{font-size:9.5px;color:#7f4a35;line-height:1.55;margin:0 0 9px}
+.suggest .mini-btn{background:var(--accent);border-color:var(--accent);color:#fff;font-size:9.5px;padding:5px 10px}
+.suggest.accepted{background:var(--green-soft);border-color:#d3dfc9}
+.suggest.accepted p{color:#3f573f}
+.note-input{
+  width:100%;border:1px solid var(--line-soft);background:var(--card);border-radius:12px;
+  padding:10px 11px;font-family:inherit;font-size:10.5px;line-height:1.6;color:var(--ink);
+  resize:none;min-height:62px;outline:none
+}
+.note-input:focus{border-color:var(--ink)}
+.note-input::placeholder{color:var(--faint)}
+.collect-head{display:flex;justify-content:space-between;align-items:flex-start;margin:2px 0 6px}
+.collect-head h3{font-family:var(--serif);font-size:27px;margin:0;font-weight:600;letter-spacing:-.02em}
+.collect-head p{font-size:10px;color:var(--muted);margin:2px 0 0}
+.collect-count{font-family:var(--serif);font-size:28px;color:var(--accent-deep);line-height:1}
+.filter-row{display:flex;gap:6px;margin:14px 0 12px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-chip{
+  border:1px solid var(--line-soft);background:var(--card);border-radius:999px;
+  padding:5px 11px;font-size:10px;color:var(--muted);cursor:pointer;white-space:nowrap;font-family:inherit
+}
+.filter-chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.task-list{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.task-row{
+  display:flex;align-items:center;gap:10px;padding:10px 11px;background:var(--card);
+  border:1px solid var(--line-soft);border-radius:13px;transition:.2s
+}
+.task-row.done{opacity:.5}
+.task-row.done .task-title{text-decoration:line-through}
+.task-check{
+  width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line);background:transparent;
+  flex:none;cursor:pointer;display:grid;place-items:center;padding:0;color:transparent
+}
+.task-row.done .task-check{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.task-row.done .task-check::after{content:"";width:6px;height:3px;border-left:1.5px solid;border-bottom:1.5px solid;transform:rotate(-45deg) translate(1px,-1px)}
+.task-main{flex:1;min-width:0}
+.task-title{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task-meta{display:flex;gap:6px;align-items:center;font-size:8.5px;color:var(--faint);margin-top:2px}
+.cat-dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.cat-create{background:var(--accent)}
+.cat-talk{background:var(--blue)}
+.cat-admin{background:#9a8f7e}
+.cat-life{background:var(--green)}
+.task-time{font-size:9px;color:var(--muted);background:var(--paper-2);border-radius:999px;padding:2px 7px;flex:none}
+.energy{font-size:8px;color:var(--faint);border:1px solid var(--line-soft);border-radius:4px;padding:1px 4px;flex:none}
+.streak-hero{background:var(--ink);color:var(--paper);border-radius:20px;padding:20px;margin:2px 0 14px;display:flex;justify-content:space-between;align-items:center}
+.streak-left span{font-size:9px;letter-spacing:.1em;color:#bdb2a2;display:block;margin-bottom:2px}
+.streak-left b{font-family:var(--serif);font-size:43px;line-height:1;font-weight:600}
+.streak-left b small{font-size:12px;font-family:var(--sans);font-weight:400;color:#cfc3b1;margin-left:5px}
+.streak-right{font-size:9px;color:#cfc3b1;text-align:right;line-height:1.6;max-width:120px}
+.streak-right b{display:block;color:#f0a487;font-size:10px;font-weight:500}
+.chart-card{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:15px;margin-bottom:12px}
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.chart-head b{font-size:11px}
+.chart-head span{font-size:9px;color:var(--muted)}
+.chart{display:flex;align-items:flex-end;gap:8px;height:96px;padding-top:4px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.chart-bar{width:100%;max-width:22px;background:#e6dccd;border-radius:4px 4px 2px 2px;transition:.3s}
+.chart-col.today .chart-bar{background:var(--accent)}
+.chart-col span{font-size:8px;color:var(--faint)}
+.stat-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat-tile{background:var(--card);border:1px solid var(--line-soft);border-radius:13px;padding:11px}
+.stat-tile span{display:block;font-size:8.5px;color:var(--faint);margin-bottom:2px}
+.stat-tile b{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:-.01em}
+.stat-tile b small{font-size:9px;font-weight:400;color:var(--muted);font-family:var(--sans)}
+.badges{display:flex;gap:6px;margin-bottom:14px}
+.badge{
+  flex:1;border:1px solid var(--line-soft);background:var(--card);border-radius:11px;
+  padding:8px 6px;text-align:center;font-size:8.5px;color:var(--muted);line-height:1.4
+}
+.badge b{display:block;font-size:10px;color:var(--ink-2);font-weight:500;margin-bottom:1px}
+.badge.locked{opacity:.45}
+.mini-cal{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;margin:4px 0 6px}
+.mini-cal i{aspect-ratio:1;border-radius:3px;background:var(--paper-2);display:block}
+.mini-cal i.on{background:var(--accent)}
+.mini-cal i.half{background:#eebfa9}
+.mini-cal-labels{display:flex;justify-content:space-between;font-size:8px;color:var(--faint)}
+.proto-side{min-width:0}
+.jump-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.jump{
+  border:1px solid var(--line-soft);background:var(--card);border-radius:10px;padding:7px 8px;
+  font-size:10px;color:var(--muted);cursor:pointer;text-align:left;display:flex;align-items:center;gap:6px;font-family:inherit;transition:.18s
+}
+.jump:hover{border-color:var(--line);color:var(--ink)}
+.jump.active{border-color:var(--ink);color:var(--ink);background:#fffefa;box-shadow:inset 0 0 0 1px var(--ink)}
+.jump i{font-style:normal;font-family:var(--serif);font-size:8.5px;color:var(--accent-deep);flex:none}
+.anno{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:20px;
+  padding:24px;min-height:360px;position:relative;overflow:hidden
+}
+.anno::before{
+  content:"";position:absolute;left:0;top:0;height:100%;width:3px;
+  background:linear-gradient(var(--accent),transparent 65%)
+}
+.anno-kicker{font-size:9.5px;letter-spacing:.14em;color:var(--accent-deep);font-weight:600;margin-bottom:6px}
+.anno h3{font-family:var(--serif);font-size:23px;font-weight:600;letter-spacing:-.015em;margin:0 0 8px;line-height:1.35}
+.anno-goal{font-size:12px;line-height:1.75;color:var(--ink-2);margin:0 0 18px;padding-bottom:16px;border-bottom:1px dashed var(--line-soft)}
+.anno-sec{margin-bottom:15px}
+.anno-sec:last-child{margin-bottom:0}
+.anno-sec h4{font-size:9px;letter-spacing:.13em;color:var(--faint);font-weight:600;margin:0 0 7px;text-transform:uppercase}
+.anno-sec ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.anno-sec li{font-size:11.5px;line-height:1.65;color:var(--ink-2);padding-left:13px;position:relative}
+.anno-sec li::before{content:"";position:absolute;left:0;top:.66em;width:4px;height:1px;background:var(--accent)}
+.design-base{margin-top:14px;background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:20px 22px}
+.db-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:14px}
+.db-head span:first-child{font-size:9.5px;letter-spacing:.13em;color:var(--faint);font-weight:600}
+.db-head span:last-child{font-size:9px;color:var(--faint)}
+.db-swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.db-swatch{border:1px solid var(--line-soft);border-radius:10px;padding:7px;font-size:8px;color:var(--faint);line-height:1.5}
+.db-swatch i{display:block;height:25px;border-radius:6px;margin-bottom:5px;border:1px solid rgba(0,0,0,.04)}
+.db-swatch b{display:block;font-size:9.5px;font-weight:500;color:var(--ink-2);margin-bottom:1px}
+.db-list{display:flex;flex-direction:column;gap:6px;font-size:10.5px;line-height:1.65;color:var(--muted)}
+.db-list b{color:var(--ink-2);font-weight:500}
+.proto-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;font-size:10px;color:var(--faint)}
+.proto-foot button{border:0;background:none;color:var(--muted);font-size:10px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
+.flows{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.flow{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;padding:22px}
+.flow-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.flow-top h4{font-size:15px;margin:0;font-weight:600;letter-spacing:-.01em}
+.flow-top span{font-size:9px;color:var(--muted);border:1px solid var(--line-soft);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.flow-steps{list-style:none;margin:0;padding:0;counter-reset:f}
+.flow-steps li{
+  counter-increment:f;position:relative;padding:0 0 13px 28px;font-size:11.5px;line-height:1.6;color:var(--ink-2)
+}
+.flow-steps li:last-child{padding-bottom:0}
+.flow-steps li::before{
+  content:counter(f,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-family:var(--serif);font-size:9px;color:var(--accent-deep);
+  width:18px;height:18px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center
+}
+.flow-steps li::after{content:"";position:absolute;left:9px;top:22px;bottom:2px;width:1px;background:var(--line-soft)}
+.flow-steps li:last-child::after{display:none}
+.req-table td:nth-child(2){color:var(--ink-2);line-height:1.6}
+.req-table td:nth-child(4){color:var(--muted);font-size:11px;line-height:1.6;min-width:220px}
+.prio{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.04em;border-radius:5px;padding:2px 6px}
+.prio.p0{background:var(--accent-soft);color:var(--accent-deep)}
+.prio.p1{background:var(--blue-soft);color:var(--blue)}
+.prio.p2{background:var(--paper-2);color:var(--muted)}
+.code-block{
+  background:#221f1a;color:#e9dfd0;border-radius:16px;padding:20px 22px;overflow-x:auto;
+  font-family:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.85;margin:16px 0 0
+}
+.code-block .t{color:#e9a17e}
+.code-block .p{color:#b9c8b1}
+.data-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:18px}
+.data-grid .code-block{margin:0;min-width:0}
+.rules-card{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;padding:20px 22px}
+.rules-card h4{margin:0 0 10px;font-size:10px;letter-spacing:.12em;color:var(--faint);font-weight:600}
+.rules-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.rules-card li{font-size:10.5px;line-height:1.7;color:var(--ink-2);padding-left:12px;position:relative}
+.rules-card li::before{content:"";position:absolute;left:0;top:.72em;width:4px;height:1px;background:var(--accent)}
+.rules-card b{font-weight:600;color:var(--ink)}
+.metrics-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-bottom:20px}
+.northstar{background:var(--ink);color:var(--paper);border-radius:20px;padding:24px}
+.northstar span{font-size:9.5px;letter-spacing:.13em;color:#bdb2a2;font-weight:600}
+.northstar b{display:block;font-family:var(--serif);font-size:24px;line-height:1.45;font-weight:500;margin:8px 0 12px}
+.northstar p{font-size:10.5px;line-height:1.7;color:#cfc3b1;margin:0}
+.funnel{background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:20px}
+.funnel h4{margin:0 0 12px;font-size:10px;letter-spacing:.12em;color:var(--faint);font-weight:600}
+.funnel-row{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-size:10.5px}
+.funnel-row span{flex:none;width:78px;color:var(--ink-2)}
+.funnel-track{flex:1;height:7px;background:var(--paper-2);border-radius:99px;overflow:hidden}
+.funnel-track i{display:block;height:100%;background:var(--accent);border-radius:99px;opacity:.85}
+.funnel-row b{width:38px;text-align:right;font-size:9px;color:var(--muted);font-weight:500}
+.targets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+.target{background:var(--card);border:1px solid var(--line-soft);border-radius:13px;padding:12px}
+.target span{font-size:8.5px;color:var(--faint);display:block;margin-bottom:2px}
+.target b{font-family:var(--serif);font-size:18px;font-weight:600}
+.target b small{font-size:8.5px;color:var(--muted);font-family:var(--sans);font-weight:400}
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;background:var(--card)}
+.phase{padding:20px 18px;border-right:1px solid var(--line-soft);position:relative}
+.phase:last-child{border-right:none}
+.phase span{font-size:9px;letter-spacing:.12em;color:var(--accent-deep);font-weight:600;display:block;margin-bottom:6px}
+.phase h4{font-size:13.5px;margin:0 0 8px;font-weight:600}
+.phase p{margin:0;font-size:10.5px;line-height:1.7;color:var(--muted)}
+.phase.now{background:#fffaf5}
+.phase.now::before{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:var(--accent)}
+.risk-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
+.risk-box{background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:20px}
+.risk-box h4{margin:0 0 10px;font-size:12px;font-weight:600}
+.risk-box ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.risk-box li{font-size:11px;line-height:1.7;color:var(--ink-2);padding-left:13px;position:relative}
+.risk-box li::before{content:"";position:absolute;left:0;top:.7em;width:4px;height:4px;border-radius:50%;background:var(--line)}
+.risk-box li b{font-weight:600;color:var(--ink)}
+.risk-box ol{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:9px}
+.risk-box ol li{font-size:11px;line-height:1.7;color:var(--ink-2);padding-left:0}
+.risk-box ol li::before{display:none}
+footer{padding:34px 0 48px;border-top:1px solid var(--line-soft);font-size:10.5px;color:var(--faint);display:flex;justify-content:space-between;gap:20px;align-items:center}
+footer b{color:var(--muted);font-weight:500}
+@media (max-height:960px){
+  .phone-col{position:static}
+}
+@media (max-width:1000px){
+  .hero{grid-template-columns:1fr;gap:34px}
+  .hero-board{justify-self:start;transform:rotate(.8deg);max-width:420px}
+  .comp-grid{grid-template-columns:repeat(2,1fr)}
+  .research-split{grid-template-columns:1fr}
+  .persona-grid{grid-template-columns:1fr}
+  .ia-grid{grid-template-columns:repeat(2,1fr)}
+  .proto-grid{grid-template-columns:minmax(0,1fr);gap:26px}
+  .phone-col{position:static}
+  .proto-side{order:2}
+  .principles{grid-template-columns:1fr}
+  .position-line{grid-template-columns:1fr;gap:20px}
+  .pl-side{border-left:none;border-top:1px solid rgba(251,247,240,.18);padding:16px 0 0}
+  .metrics-grid{grid-template-columns:1fr}
+  .data-grid{grid-template-columns:1fr}
+  .roadmap{grid-template-columns:repeat(2,1fr)}
+  .phase:nth-child(2){border-right:none}
+  .phase:nth-child(1),.phase:nth-child(2){border-bottom:1px solid var(--line-soft)}
+  .risk-grid{grid-template-columns:1fr}
+  .targets{grid-template-columns:repeat(2,1fr)}
+  .doc-nav{display:none}
+}
+@media (max-width:720px){
+  .wrap{padding:0 18px}
+  section{padding:48px 0}
+  .hero{padding:48px 0 40px}
+  .hero h1{font-size:clamp(34px,9.6vw,46px)}
+  .sec-head{display:block;margin-bottom:24px}
+  .sec-lead{margin-top:10px}
+  .proto-head{display:block;margin-bottom:20px}
+  .proto-hint{margin-top:10px;font-size:10.5px}
+  .db-swatches{grid-template-columns:repeat(2,1fr)}
+  .comp-grid{grid-template-columns:1fr}
+  .comp-desc{min-height:0}
+  .pain-row{grid-template-columns:1fr}
+  .pain-row>div+div{border-left:none;border-top:1px solid var(--line-soft)}
+  .pain-row>div{padding:11px 14px}
+  .pain-row.head{display:none}
+  .flows{grid-template-columns:1fr}
+  .ia-grid{grid-template-columns:1fr}
+  .jump-grid{grid-template-columns:repeat(2,1fr)}
+  .phone{width:min(330px,100%);height:712px;border-radius:46px;padding:7px}
+  .phone-screen{border-radius:40px}
+  .statusbar{height:42px;padding:0 20px 4px}
+  .dynamic-island{top:7px;width:94px;height:24px}
+  .tabbar{height:62px}
+  .tab{font-size:9px}
+  .tl-canvas{height:600px}
+  .roadmap{grid-template-columns:1fr}
+  .phase{border-right:none;border-bottom:1px solid var(--line-soft)}
+  .targets{grid-template-columns:1fr 1fr}
+  footer{display:block;line-height:1.9}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">日</span>
+      日刻 <small>DAYMARK</small>
+    </a>
+    <nav class="doc-nav">
+      <a href="#research">竞品研究</a>
+      <a href="#users">用户</a>
+      <a href="#position">机制</a>
+      <a href="#prototype">原型</a>
+      <a href="#spec">需求</a>
+      <a href="#metrics">指标</a>
+      <a href="#roadmap">排期</a>
+      <span class="ver">PRD v0.1</span>
+    </nav>
+  </div>
+</div>
+
+<main id="top">
+  <div class="wrap">
+    <section class="hero" style="border-top:none">
+      <div>
+        <div class="eyebrow">个人日内规划 · 微信小程序 · PRD</div>
+        <h1>把一天<br><em>排成你想要的样子</em>。</h1>
+        <p class="hero-lead">
+          日刻是一个面向自由职业者与创作者的时间块规划器。它先帮你算清今天真正装得下多少，再把任务排进时间轴；执行时只面对眼前这一块；晚上用 60 秒对账，让明天的计划比今天更准一点。
+        </p>
+        <div class="hero-meta">
+          <span class="meta-chip"><b>目标用户</b> 自由职业 / 创作者</span>
+          <span class="meta-chip"><b>核心形态</b> 时间块排程</span>
+          <span class="meta-chip"><b>平台</b> 微信小程序</span>
+          <span class="meta-chip"><b>原型</b> 8 屏可交互</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-dark" href="#prototype">直接玩原型</a>
+          <a class="btn btn-line" href="#research">先看竞品结论</a>
+        </div>
+      </div>
+      <div class="hero-board" aria-hidden="true">
+        <div class="hb-top"><span>11 / 23 · 周日</span><span class="hb-stamp">留白 1.25h</span></div>
+        <div class="hb-title">今天只做三件事</div>
+        <div class="hb-list">
+          <div class="hb-row"><i>01</i><span>品牌插画 · 主视觉</span><span>90m</span></div>
+          <div class="hb-row"><i>02</i><span>客户提案修改</span><span>75m</span></div>
+          <div class="hb-row"><i>03</i><span>整理作品集</span><span>60m</span></div>
+        </div>
+        <div class="hb-cap">
+          <div class="hb-cap-labels"><span>已排 4.75h</span><span>容量 6.0h</span></div>
+          <div class="hb-bar"><i></i></div>
+        </div>
+        <div class="hb-note">超出容量的部分不会消失，它会被移到「本周稍后」。留白不建议动。</div>
+      </div>
+    </section>
+
+    <section id="research">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">01 / COMPETITIVE RESEARCH</div>
+          <h2>竞品都在解决「排得下」，<br>很少解决「排得准」。</h2>
+        </div>
+        <p class="sec-lead">调研了 6 款时间块 / 清单 / AI 日历产品，以及国内清单系产品的共性。结论很一致：市场不缺清单和日历，缺的是对「今天到底能完成什么」的现实判断，以及计划与实际的闭环。</p>
+      </div>
+
+      <div class="comp-grid">
+        <article class="comp-card">
+          <div class="comp-top"><span class="comp-name">Sunsama</span><span class="comp-tag">美国 · 订阅约 $20/月</span></div>
+          <p class="comp-desc">把任务、日历、每日规划仪式和日终 shutdown 串成一套工作流，主张「从容开始、专注、安心结束」。</p>
+          <div class="comp-block"><b>值得借鉴</b><span>每日规划仪式、Focus Mode、日终 highlights、日历与任务统一。</span></div>
+          <div class="comp-block gap"><b>缺口</b><span>围绕打工人和会议日历设计，价格高，移动端不是主角。</span></div>
+        </article>
+        <article class="comp-card">
+          <div class="comp-top"><span class="comp-name">Motion</span><span class="comp-tag">美国 · 订阅约 $29/月</span></div>
+          <p class="comp-desc">AI 自动排程的代表：任务和项目自动找时间，冲突时自动重排，偏团队与项目管理。</p>
+          <div class="comp-block"><b>值得借鉴</b><span>自动排程、冲突重排、把「排不下」变成系统问题。</span></div>
+          <div class="comp-block gap"><b>缺口</b><span>黑盒感强、学习成本高；对个人创作者的精力节奏不敏感。</span></div>
+        </article>
+        <article class="comp-card">
+          <div class="comp-top"><span class="comp-name">Reclaim.ai</span><span class="comp-tag">美国 · 免费起 / 约 $10/月</span></div>
+          <p class="comp-desc">在 Google / Outlook 日历上自动防守 Focus Time、Habits、Buffer，把「保护时间」做成 AI agent。</p>
+          <div class="comp-block"><b>值得借鉴</b><span>缓冲时间、自动防守、按目标倒推时间块。</span></div>
+          <div class="comp-block gap"><b>缺口</b><span>依赖外部日历；偏「防守已有时间」，而非「规划今天怎么过」。</span></div>
+        </article>
+        <article class="comp-card">
+          <div class="comp-top"><span class="comp-name">Structured</span><span class="comp-tag">德国 · 约 $3/月或买断</span></div>
+          <p class="comp-desc">单日时间轴可视化的标杆，快速创建任务、跨手机/桌面/手表，15M+ 下载、400K+ 五星。</p>
+          <div class="comp-block"><b>值得借鉴</b><span>极低摩擦的视觉排程、时间轴本身就是产品、价格友好。</span></div>
+          <div class="comp-block gap"><b>缺口</b><span>纯手动，没有容量预警、没有执行数据、也没有复盘。</span></div>
+        </article>
+        <article class="comp-card">
+          <div class="comp-top"><span class="comp-name">TickTick / 滴答清单</span><span class="comp-tag">中国 · 约 ¥139/年</span></div>
+          <p class="comp-desc">清单、日历、番茄、习惯、统计的全能型选手，NLP 输入和跨端体验成熟。</p>
+          <div class="comp-block"><b>值得借鉴</b><span>快速捕捉、自然语言时间识别、低门槛上手。</span></div>
+          <div class="comp-block gap"><b>缺口</b><span>功能堆叠；时间块不是主角，「今天是否排得下」不清晰。</span></div>
+        </article>
+        <article class="comp-card">
+          <div class="comp-top"><span class="comp-name">Llama Life</span><span class="comp-tag">美国 · 约 $12/月</span></div>
+          <p class="comp-desc">一次只做一件事的时间块列表，倒计时 + 任务结束庆祝，对 ADHD 用户友好。</p>
+          <div class="comp-block"><b>值得借鉴</b><span>单任务执行界面、结束反馈、降低启动阻力。</span></div>
+          <div class="comp-block gap"><b>缺口</b><span>没有日历视图和容量概念，也没有复盘与长期数据。</span></div>
+        </article>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>产品</th><th>时间块</th><th>容量 / 超载</th><th>专注执行</th><th>日终复盘</th><th>自动排程</th><th>参考价（量级）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sunsama</td><td><span class="mark yes">有</span></td><td><span class="mark part">部分</span></td><td><span class="mark yes">有</span></td><td><span class="mark yes">有</span></td><td><span class="mark part">部分</span></td><td>约 $20 / 月</td></tr>
+            <tr><td>Motion</td><td><span class="mark yes">有</span></td><td><span class="mark part">部分</span></td><td><span class="mark part">部分</span></td><td><span class="mark part">部分</span></td><td><span class="mark yes">强</span></td><td>约 $29 / 月</td></tr>
+            <tr><td>Reclaim.ai</td><td><span class="mark yes">有</span></td><td><span class="mark part">部分</span></td><td><span class="mark part">部分</span></td><td><span class="mark part">部分</span></td><td><span class="mark yes">强</span></td><td>免费起 / 约 $10</td></tr>
+            <tr><td>Structured</td><td><span class="mark yes">有</span></td><td><span class="mark no">无</span></td><td><span class="mark no">无</span></td><td><span class="mark no">无</span></td><td><span class="mark no">无</span></td><td>约 $3 / 月</td></tr>
+            <tr><td>TickTick</td><td><span class="mark part">部分</span></td><td><span class="mark no">弱</span></td><td><span class="mark yes">有</span></td><td><span class="mark part">部分</span></td><td><span class="mark no">无</span></td><td>约 ¥139 / 年</td></tr>
+            <tr><td>Llama Life</td><td><span class="mark yes">有</span></td><td><span class="mark no">无</span></td><td><span class="mark yes">强</span></td><td><span class="mark no">无</span></td><td><span class="mark no">无</span></td><td>约 $12 / 月</td></tr>
+            <tr class="us"><td>日刻（本产品）</td><td><span class="mark yes">核心</span></td><td><span class="mark yes">核心</span></td><td><span class="mark yes">核心</span></td><td><span class="mark yes">核心</span></td><td><span class="mark part">MVP</span></td><td>免费 + 订阅（待定）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">信息来源：各产品官网公开页面与公开产品资料，整理于 2026-11；价格为公开标价量级，可能随地区与促销变动。国内清单/番茄类产品（时光序、番茄 ToDo、时间块等）未逐一入表，共性观察见下方结论。</p>
+      <p class="note" style="margin-top:4px">官网：<a href="https://www.sunsama.com/" target="_blank" rel="noopener">Sunsama</a> · <a href="https://www.usemotion.com/" target="_blank" rel="noopener">Motion</a> · <a href="https://reclaim.ai/" target="_blank" rel="noopener">Reclaim.ai</a> · <a href="https://structured.app/" target="_blank" rel="noopener">Structured</a> · <a href="https://ticktick.com/" target="_blank" rel="noopener">TickTick</a> · <a href="https://www.llamalife.co/" target="_blank" rel="noopener">Llama Life</a></p>
+
+      <div class="research-split">
+        <div class="insight-list">
+          <div class="insight"><span class="insight-num">01</span><p><b>头部产品都在拼「工作流」，但默认你是开会的人。</b> Sunsama / Motion / Reclaim 都从日历空隙出发；自由职业者的日历往往很空，真正稀缺的是精力与边界。</p></div>
+          <div class="insight"><span class="insight-num">02</span><p><b>移动端时间轴大多只能「看」，不能「排」。</b> 拖拽在小屏上依然别扭。点选时段 + 智能建议，比精确拖拽更适合小程序。</p></div>
+          <div class="insight"><span class="insight-num">03</span><p><b>自动排程解决「排得下」，但会制造失控感。</b> 黑盒重排让人不知道计划为什么变了。「建议 + 一键接受 + 单块可改」是更稳的折中。</p></div>
+          <div class="insight"><span class="insight-num">04</span><p><b>复盘普遍是报表，不是闭环。</b> 用户不需要更多图表，需要「为什么偏了、明天怎么改」。归因 + 明日容量建议是空位。</p></div>
+          <div class="insight"><span class="insight-num">05</span><p><b>中文产品强在清单、番茄、打卡，弱在现实容量。</b> 用户被教育了「记录」，但没有被教会「估算」。容量模型是可以建立差异化的地方。</p></div>
+        </div>
+        <div class="matrix-card">
+          <div class="matrix-head"><span>定位矩阵</span><span>任务中心 ←→ 时间中心 / 计划 ←→ 执行闭环</span></div>
+          <div class="matrix">
+            <span class="matrix-axis axl">执行与复盘闭环更强</span>
+            <span class="matrix-axis axt">更偏计划</span>
+            <span class="matrix-axis axr">更偏时间 / 日历 →</span>
+            <div class="dot" style="left:22%;top:24%"><i></i>Llama Life</div>
+            <div class="dot" style="left:36%;top:56%"><i></i>TickTick</div>
+            <div class="dot" style="left:60%;top:70%"><i></i>Structured</div>
+            <div class="dot" style="left:74%;top:42%"><i></i>Reclaim</div>
+            <div class="dot" style="left:82%;top:58%"><i></i>Motion</div>
+            <div class="dot" style="left:70%;top:22%"><i></i>Sunsama</div>
+            <div class="dot us" style="left:64%;top:10%"><i></i>日刻</div>
+          </div>
+          <p class="matrix-note">日刻要占的位置：时间中心 + 强执行闭环，但以「容量与精力」而不是「会议空隙」为排程起点。比 Sunsama 更轻、更便宜、更适合手机上的 90 秒仪式。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="users">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">02 / USER & PROBLEM</div>
+          <h2>不是没有计划，<br>是每次都排得太满。</h2>
+        </div>
+        <p class="sec-lead">自由职业者的时间看起来自由，实际被需求、修改、消息和自我期待切碎。产品要解决的不是「记录更多」，而是「当天做得完，并且知道为什么没做完」。</p>
+      </div>
+
+      <div class="persona-grid">
+        <div class="persona">
+          <div class="persona-name"><b>林一</b><span>29 岁</span></div>
+          <div class="persona-role">自由插画师 / 独立接单 · 一人公司 · 微信里全是需求</div>
+          <ul class="persona-day">
+            <li><time>8:30</time>送完孩子，咖啡还没喝完，先刷一遍微信。</li>
+            <li><time>9:10</time>想画主视觉，又想起报价没回、发票没开。</li>
+            <li><time>10:40</time>客户临时改需求，上午的深度块被切掉一半。</li>
+            <li><time>15:00</time>清单越写越长，干脆先做杂事。</li>
+            <li><time>23:00</time>发现正事没做完，明天继续排满。</li>
+          </ul>
+          <p class="quote">「我不是没计划，是每次都排太满，然后一整天都在还债。」</p>
+          <p class="quote-meta">合成画像，基于公开创作者社区讨论与竞品评论归纳；上线前需 5 人日记研究验证</p>
+        </div>
+        <div class="jobs">
+          <div class="job">
+            <b>核心 JTBD</b>
+            <p>当我早上只有十分钟规划时，我想快速判断「今天到底能完成什么」，并把最重要的事放进我状态最好的时段；这样我晚上不会因为没做完而自责，第二天也愿意继续打开它。</p>
+          </div>
+          <div class="job">
+            <b>使用场景</b>
+            <p>晨间 90 秒规划 · 白天被临时需求打断后的重排 · 开始深度创作前的专注启动 · 晚间 60 秒对账 · 周日的下一周节奏预览。</p>
+          </div>
+          <div class="job">
+            <b>产品承诺</b>
+            <p>不替你决定人生，只帮你看清今天。计划可以崩，但每次崩都能在两步内重排；留白不是浪费，是明天还能继续的前提。</p>
+          </div>
+          <div class="job">
+            <b>非目标用户（MVP）</b>
+            <p>需要团队排期、甘特图、工时审批的项目经理；只想做习惯打卡的用户；需要强制锁机的极简番茄用户。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pain-table">
+        <div class="pain-row head"><div>你选的痛点</div><div>产品机制</div><div>落在哪个界面</div></div>
+        <div class="pain-row">
+          <div class="pain">事情太多，不知道先做什么</div>
+          <div class="mech">今日三件事 + 精力标签：先定 3 个必须完成，其余默认进「本周稍后」</div>
+          <div class="ui">晨间规划 Step 2 / 今日页</div>
+        </div>
+        <div class="pain-row">
+          <div class="pain">计划不现实，总是做不完</div>
+          <div class="mech">容量模型：可用时间 − 固定事项 − 20% 缓冲；超载时给具体出口</div>
+          <div class="ui">今日页容量条 / Step 3</div>
+        </div>
+        <div class="pain-row">
+          <div class="pain">执行时容易分心、拖延</div>
+          <div class="mech">单块专注模式 + 走神捕手：想法先存起来，不打断计时</div>
+          <div class="ui">专注页</div>
+        </div>
+        <div class="pain-row">
+          <div class="pain">计划和实际脱节，没有复盘</div>
+          <div class="mech">日终对账 + 归因标签 + 明日容量建议，60 秒完成</div>
+          <div class="ui">复盘页</div>
+        </div>
+        <div class="pain-row">
+          <div class="pain">坚持不下来，缺乏激励</div>
+          <div class="mech">连续记录不惩罚中断；允许「轻量日」与补记；用创作小时而非打卡数说话</div>
+          <div class="ui">统计页 / 复盘页</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="position">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">03 / POSITIONING</div>
+          <h2>先算容量，再排时间块，<br>晚上自动对账。</h2>
+        </div>
+        <p class="sec-lead">一句话定位：给自由职业者的日内规划器。不是又一个待办清单，而是一张每天都能被验证的「时间预算表」。</p>
+      </div>
+
+      <div class="position-line">
+        <div>
+          <div class="pl-kicker">PRODUCT POSITIONING</div>
+          <p>给自由职业者与创作者的<em>日内规划器</em>：用容量约束让计划变现实，用时间块让执行变简单，用日终对账让明天更准。</p>
+        </div>
+        <div class="pl-side">
+          <span>不是</span>
+          <b>另一个全能清单<br>另一个自动排程黑盒<br>另一个番茄打卡器</b>
+        </div>
+      </div>
+
+      <div class="principles">
+        <div class="principle">
+          <i>原则 01</i>
+          <h4>容量先于清单</h4>
+          <p>没有容量约束的计划只是愿望。先看今天有多少可用小时、多少高质量精力，再决定放什么进去。</p>
+        </div>
+        <div class="principle">
+          <i>原则 02</i>
+          <h4>留白是功能</h4>
+          <p>默认只排 60–70% 的可用时间，并保护缓冲。留白不是浪费，是应对临时需求与状态波动的空间。</p>
+        </div>
+        <div class="principle">
+          <i>原则 03</i>
+          <h4>不羞辱中断</h4>
+          <p>没完成不是失败，是可以被重排的事实。任何一次偏航都能在两步内处理，不靠自责驱动。</p>
+        </div>
+      </div>
+
+      <div class="non-goals">
+        <b>MVP 不做：</b>社交动态与排行榜 · 团队协作与共享日历 · 甘特图/项目依赖 · 强制锁机与惩罚式打卡 · 复杂 OKR 体系。先把「今天」做透，再谈「一周」和「一年」。
+      </div>
+
+      <div class="sec-head" style="margin-top:44px;margin-bottom:18px">
+        <div>
+          <div class="sec-kicker">INFORMATION ARCHITECTURE</div>
+          <h2 style="font-size:clamp(24px,2.8vw,32px)">信息架构：四个主入口，四条全屏流。</h2>
+        </div>
+      </div>
+      <div class="ia-grid">
+        <div class="ia-col">
+          <h4><i>01</i>今日</h4>
+          <p>App 的默认页，回答「现在做什么」</p>
+          <ul>
+            <li>容量条与超载提示</li>
+            <li>今日三件事</li>
+            <li>时间轴与当前块</li>
+            <li>快速添加时间块</li>
+          </ul>
+        </div>
+        <div class="ia-col">
+          <h4><i>02</i>收集</h4>
+          <p>先记下来，晚点再决定</p>
+          <ul>
+            <li>快速记录与语音</li>
+            <li>预估时长 / 精力标签</li>
+            <li>创作 / 沟通 / 行政 / 生活</li>
+            <li>开始今日规划入口</li>
+          </ul>
+        </div>
+        <div class="ia-col">
+          <h4><i>03</i>复盘</h4>
+          <p>60 秒完成的对账与归因</p>
+          <ul>
+            <li>计划 vs 实际</li>
+            <li>偏航原因标签</li>
+            <li>明日容量建议</li>
+            <li>一句值得保留的事</li>
+          </ul>
+        </div>
+        <div class="ia-col">
+          <h4><i>04</i>统计</h4>
+          <p>只展示能改变行为的数字</p>
+          <ul>
+            <li>连续记录（允许轻量日）</li>
+            <li>本周创作小时</li>
+            <li>计划兑现率</li>
+            <li>最常超时的类型</li>
+          </ul>
+        </div>
+      </div>
+      <div class="global-layer">
+        <b>全屏流程</b>
+        <span>晨间三步规划</span>
+        <span>专注模式</span>
+        <span>任务详情 / 重排</span>
+        <span>设置与订阅</span>
+      </div>
+    </section>
+
+    <section id="prototype">
+      <div class="proto-head">
+        <div>
+          <div class="sec-kicker">04 / INTERACTIVE PROTOTYPE</div>
+          <h2 style="font-family:var(--serif);font-size:clamp(28px,3.4vw,40px);margin:0;letter-spacing:-.02em">可交互原型：8 个关键屏幕。</h2>
+        </div>
+        <div class="proto-hint"><i></i>手机内可点：底部 Tab、开始规划、三步流程、专注计时、复盘标签</div>
+      </div>
+
+      <p class="note" style="margin:-8px 0 20px">原型包含少量 P1 能力（走神捕手、明日容量建议、轻量日），用于提前验证交互；MVP 上线时可按需求表后置，不影响主流程闭环。</p>
+
+      <div class="proto-grid">
+        <div class="phone-col">
+          <div class="phone-stage">
+            <div class="phone" id="phone">
+              <div class="dynamic-island"></div>
+              <div class="phone-screen">
+                <div class="statusbar">
+                  <span>10:12</span>
+                  <div class="status-icons">
+                    <span class="signal"><i></i><i></i><i></i><i></i></span>
+                    <svg width="16" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M1.4 8.7c4-3.8 10.2-3.8 14.2 0" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="8.5" cy="9.6" r="1.1" fill="currentColor"/></svg>
+                    <span class="battery"><i></i></span>
+                  </div>
+                </div>
+                <div class="app">
+                  <div class="app-body" id="appBody">
+
+                    <section class="screen active" data-screen="today">
+                      <div class="dayline"><span>11 月 23 日 · 周日</span><span class="streak-pill">连续 12 天</span></div>
+                      <div class="today-head">
+                        <h3>早上好，阿川</h3>
+                        <p>今天想留下点什么？</p>
+                      </div>
+
+                      <div class="cap-card">
+                        <div class="cap-top">
+                          <div><div class="cap-lead" id="capLead">6.0h 可用</div><div class="cap-sub" id="capSub">已排 7.4h · 留白 3h 未动</div></div>
+                          <div class="cap-warn" id="capWarn">超出 1.4h</div>
+                        </div>
+                        <div class="cap-bar"><span class="cap-fill" id="capFill"></span><span class="cap-over" id="capOver"></span></div>
+                        <div class="cap-scale"><span>0h</span><span>容量 6.0h</span><span>7.4h</span></div>
+                        <div class="cap-note" id="capNote">今天排得比装得下多。建议移出 1–2 个低优先级块，留白不要动。</div>
+                        <div class="cap-actions">
+                          <button class="mini-btn solid" id="trimBtn">移出 2 项</button>
+                          <button class="mini-btn" data-toast="已按精力与截止时间重排，留白保留">智能重排</button>
+                        </div>
+                      </div>
+
+                      <div class="sec-label">今日三件事 <span id="mitCount">1 / 3 完成</span></div>
+                      <div class="mit-list">
+                        <div class="mit done">
+                          <button class="mit-check" aria-label="完成任务"></button>
+                          <div class="mit-body"><div class="mit-title">回复客户 A 的修改意见</div><div class="mit-meta">沟通 · 实际 22 分钟</div></div>
+                          <div class="mit-side">20m</div>
+                        </div>
+                        <div class="mit current">
+                          <button class="mit-check" aria-label="完成任务"></button>
+                          <div class="mit-body"><div class="mit-title">品牌插画 · 主视觉草稿</div><div class="mit-meta">深度创作 · 9:00 开始</div></div>
+                          <div class="mit-side"><span class="live-tag">进行中</span></div>
+                        </div>
+                        <div class="mit">
+                          <button class="mit-check" aria-label="完成任务"></button>
+                          <div class="mit-body"><div class="mit-title">整理作品集 · 选 6 张</div><div class="mit-meta">创作 · 建议放到明天</div></div>
+                          <div class="mit-side">60m</div>
+                        </div>
+                      </div>
+
+                      <div class="sec-label">时间轴 <button data-go="plan1">重新规划</button></div>
+                      <div class="timeline">
+                        <div class="tl-canvas">
+                          <span class="tl-label" style="top:0">09:00</span>
+                          <span class="tl-label" style="top:6.5%">10:00</span>
+                          <span class="tl-label" style="top:15.4%">11:00</span>
+                          <span class="tl-label" style="top:23%">12:00</span>
+                          <span class="tl-label" style="top:30.8%">13:00</span>
+                          <span class="tl-label" style="top:38.5%">14:00</span>
+                          <span class="tl-label" style="top:46.2%">15:00</span>
+                          <span class="tl-label" style="top:53.8%">16:00</span>
+                          <span class="tl-label" style="top:61.5%">17:00</span>
+                          <span class="tl-label" style="top:69.2%">18:00</span>
+                          <span class="tl-label" style="top:76.9%">19:00</span>
+                          <span class="tl-label" style="top:84.6%">20:00</span>
+                          <span class="tl-label" style="top:92.3%">21:00</span>
+
+                          <div class="tl-block deep current" style="top:0;height:91px">
+                            <b>品牌插画 · 主视觉草稿</b>
+                            <small>09:00–10:30 · 深度创作 · 90m</small>
+                            <button class="tl-play" data-go="focus" aria-label="继续专注"><svg viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z"/></svg></button>
+                          </div>
+
+                          <div class="tl-block meet" style="top:96px;height:76px">
+                            <b>客户 A · 提案修改</b>
+                            <small>10:45–12:00 · 沟通交付 · 75m</small>
+                          </div>
+
+                          <div class="tl-block rest" style="top:172px;height:91px">
+                            <b>午餐 · 散步</b>
+                            <small>12:00–13:30 · 不排事</small>
+                          </div>
+
+                          <div class="tl-block deep" style="top:263px;height:91px">
+                            <b>品牌插画 · 上色</b>
+                            <small>13:30–15:00 · 深度创作 · 90m</small>
+                          </div>
+
+                          <div class="tl-block admin optional" data-optional style="top:354px;height:43px">
+                            <b>回消息 / 开发票</b>
+                            <small>15:00–15:40 · 行政 · 40m</small>
+                          </div>
+
+                          <div class="tl-block rest" style="top:406px;height:61px">
+                            <b>运动 · 拉伸</b>
+                            <small>16:00–17:00 · 恢复</small>
+                          </div>
+
+                          <div class="tl-block buffer" style="top:450px;height:182px">
+                            <b>留白 · 不排事</b>
+                            <small>17:00–20:00 · 临时需求 / 缓冲</small>
+                          </div>
+
+                          <div class="tl-block deep optional" data-optional style="top:637px;height:57px">
+                            <b>课程脚本 · 初稿</b>
+                            <small>20:00–21:00 · 低优先级 · 60m</small>
+                          </div>
+
+                          <div class="tl-block ritual" style="top:694px;height:32px">
+                            <b>今日复盘</b>
+                            <small>21:00–21:30</small>
+                          </div>
+
+                          <div class="tl-now" style="top:63px"><span>现在 10:12</span></div>
+                        </div>
+                      </div>
+                      <button class="add-block" data-go="plan1">＋ 添加时间块</button>
+                    </section>
+
+                    <section class="screen" data-screen="plan1">
+                      <div class="plan-top">
+                        <button class="icon-btn" data-go="today" aria-label="返回今日"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                        <span class="plan-kicker">晨间规划 · 90 秒</span>
+                        <button class="icon-btn" data-go="today" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                      </div>
+                      <div class="steps">
+                        <div class="step active">01 清空大脑</div>
+                        <div class="step">02 只留三件</div>
+                        <div class="step">03 排进时间</div>
+                      </div>
+                      <h3 class="plan-title">先把脑子里的东西倒出来。</h3>
+                      <p class="plan-sub">不排序，不判断。想到什么写什么，时长可以之后再改。这里不会评判你。</p>
+
+                      <div class="quick-add">
+                        <input id="dumpInput" type="text" placeholder="现在最占脑子的一件事是…" aria-label="快速记录">
+                        <button id="dumpAdd" aria-label="添加">＋</button>
+                      </div>
+
+                      <div class="dump-list" id="dumpList">
+                        <div class="dump-item"><span>回复合作邀约邮件</span><em>20m</em></div>
+                        <div class="dump-item"><span>品牌插画 · 主视觉草稿</span><em>90m</em></div>
+                        <div class="dump-item"><span>整理作品集 · 选 6 张</span><em>60m</em></div>
+                        <div class="dump-item"><span>开发票（11 月）</span><em>15m</em></div>
+                        <div class="dump-item"><span>客户 A 提案修改</span><em>75m</em></div>
+                        <div class="dump-item"><span>拍一组新素材</span><em>45m</em></div>
+                      </div>
+
+                      <div class="chip-row">
+                        <button class="chip" data-dump>回邮件 20m</button>
+                        <button class="chip" data-dump>改报价 30m</button>
+                        <button class="chip" data-dump>看课程 45m</button>
+                      </div>
+
+                      <div class="bottom-cta">
+                        <button class="btn-block" data-go="plan2">下一步 · 挑出三件事
+                          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                        <p class="plan-tip">不用清空所有事，先处理今天真正要在意的。</p>
+                      </div>
+                    </section>
+
+                    <section class="screen" data-screen="plan2">
+                      <div class="plan-top">
+                        <button class="icon-btn" data-go="plan1" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                        <span class="plan-kicker">晨间规划 · 第 2 步</span>
+                        <button class="icon-btn" data-go="today" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                      </div>
+                      <div class="steps">
+                        <div class="step done">01 清空大脑</div>
+                        <div class="step active">02 只留三件</div>
+                        <div class="step">03 排进时间</div>
+                      </div>
+                      <h3 class="plan-title">今天只做三件事。</h3>
+                      <p class="plan-sub">选 3 件「做完今天就算没白过」的事。其余不会消失，会进入「本周稍后」，明天还可以再挑。</p>
+
+                      <div class="pick-list">
+                        <div class="pick-row sel" data-pick>
+                          <span class="pick-box">✓</span>
+                          <div class="pick-main"><b>品牌插画 · 主视觉草稿</b><small>深度创作 · 90m · 高精力</small></div>
+                          <span class="pick-rank">第 1 件</span>
+                        </div>
+                        <div class="pick-row sel" data-pick>
+                          <span class="pick-box">✓</span>
+                          <div class="pick-main"><b>客户 A 提案修改</b><small>沟通交付 · 75m · 中精力</small></div>
+                          <span class="pick-rank">第 2 件</span>
+                        </div>
+                        <div class="pick-row sel" data-pick>
+                          <span class="pick-box">✓</span>
+                          <div class="pick-main"><b>回复合作邀约</b><small>沟通 · 20m · 低精力</small></div>
+                          <span class="pick-rank">第 3 件</span>
+                        </div>
+                        <div class="pick-row" data-pick>
+                          <span class="pick-box">✓</span>
+                          <div class="pick-main"><b>整理作品集 · 选 6 张</b><small>创作 · 60m · 中精力</small></div>
+                          <span class="pick-rank">第 4 件</span>
+                        </div>
+                        <div class="pick-row" data-pick>
+                          <span class="pick-box">✓</span>
+                          <div class="pick-main"><b>开发票（11 月）</b><small>行政 · 15m · 低精力</small></div>
+                          <span class="pick-rank">第 5 件</span>
+                        </div>
+                      </div>
+                      <div class="later-box"><span>其余 <b id="laterCount">2</b> 件 → 本周稍后</span><span>不会丢</span></div>
+
+                      <div class="bottom-cta">
+                        <button class="btn-block" data-go="plan3">下一步 · 排进时间
+                          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                        <p class="plan-tip">三件之外的事，今天做是加分，不做也不算失败。</p>
+                      </div>
+                    </section>
+
+                    <section class="screen" data-screen="plan3">
+                      <div class="plan-top">
+                        <button class="icon-btn" data-go="plan2" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                        <span class="plan-kicker">晨间规划 · 第 3 步</span>
+                        <button class="icon-btn" data-go="today" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+                      </div>
+                      <div class="steps">
+                        <div class="step done">01 清空大脑</div>
+                        <div class="step done">02 只留三件</div>
+                        <div class="step active">03 排进时间</div>
+                      </div>
+                      <h3 class="plan-title">把三件事放进今天。</h3>
+                      <p class="plan-sub">按你的精力曲线，把重要的事放在前面。系统会先留出 20% 缓冲，再计算是否排得下。</p>
+
+                      <div class="plan3-cap">
+                        <div class="row"><b id="p3Planned">已排 0h</b><span id="p3Capacity">容量 6.0h · 留白目标 1.2h</span></div>
+                        <div class="plan3-bar"><i id="p3Bar"></i></div>
+                        <div class="plan3-meta"><span>09:00</span><span id="p3Buffer">留白 6.0h</span><span>21:30</span></div>
+                      </div>
+
+                      <div class="smart-empty" id="smartEmpty">
+                        <b>先让日刻排一版？</b>
+                        <p>根据你的历史完成率与精力标签，给出可整体接受、也可单块调整的建议。</p>
+                        <button class="mini-btn solid" id="smartBtn">智能排程</button>
+                      </div>
+
+                      <div class="sched-preview" id="schedPreview">
+                        <div class="sched-list">
+                          <div class="sched-row"><time>09:00–10:30</time><span class="bar" style="background:var(--accent)"></span><b>品牌插画 · 主视觉草稿</b><em>90m</em></div>
+                          <div class="sched-row"><time>10:45–11:05</time><span class="bar" style="background:var(--blue)"></span><b>回复合作邀约</b><em>20m</em></div>
+                          <div class="sched-row"><time>11:05–11:45</time><span class="bar" style="background:var(--line)"></span><b>回消息 / 开发票</b><em>40m</em></div>
+                          <div class="sched-row"><time>13:30–15:00</time><span class="bar" style="background:var(--accent)"></span><b>客户 A 提案修改</b><em>75m</em></div>
+                          <div class="sched-row"><time>16:00–17:00</time><span class="bar" style="background:var(--green)"></span><b>运动 · 拉伸</b><em>60m</em></div>
+                          <div class="sched-row"><time>17:00–18:15</time><span class="bar" style="background:#d9cfbf"></span><b>留白 · 不排事</b><em>75m</em></div>
+                        </div>
+                        <button class="mini-btn" id="resmartBtn">重新排一版</button>
+                      </div>
+
+                      <div class="bottom-cta">
+                        <button class="btn-block accent" id="finishPlan">完成今日规划
+                          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        </button>
+                        <p class="plan-tip">之后随时可以在今日页点「重新规划」。</p>
+                      </div>
+                    </section>
+
+                    <section class="screen" data-screen="focus">
+                      <div class="focus-inner">
+                        <div class="focus-top">
+                          <button class="icon-btn" data-go="today" aria-label="返回"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+                          <span class="focus-state"><i></i>专注中</span>
+                        </div>
+                        <div class="focus-kicker">深度创作 · 第 2 段</div>
+                        <h3 class="focus-title">品牌插画 · 主视觉草稿</h3>
+                        <p class="focus-sub">这一块只做这件事。其他的，先放在旁边。</p>
+
+                        <div class="ring" id="focusRing" style="--p:53">
+                          <div class="ring-inner">
+                            <div class="ring-time" id="focusTime">42:18</div>
+                            <div class="ring-label">剩余</div>
+                          </div>
+                        </div>
+                        <div class="focus-meta"><span>计划 <b>90 分钟</b></span><span>已专注 <b>47 分钟</b></span></div>
+
+                        <div class="focus-actions">
+                          <button class="focus-pause" id="pauseBtn">
+                            <svg viewBox="0 0 12 12"><rect x="1" y="0" width="3" height="12" rx="1"/><rect x="8" y="0" width="3" height="12" rx="1"/></svg>
+                            暂停
+                          </button>
+                          <button class="focus-done" id="finishFocus">
+                            <svg viewBox="0 0 12 12"><path d="M1 6l3.2 3.2L11 1.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            完成本段
+                          </button>
+                        </div>
+
+                        <div class="park-card">
+                          <div class="park-head"><b>走神了？先记下来</b><span>不计入中断</span></div>
+                          <p class="park-sub">想法、待办、情绪都可以。写完继续，不用现在处理。</p>
+                          <div class="park-chips">
+                            <button data-park="想法">想法</button>
+                            <button data-park="待办">待办</button>
+                            <button data-park="情绪">情绪</button>
+                          </div>
+                          <div class="park-input">
+                            <input id="parkInput" type="text" placeholder="刚刚想到…" aria-label="记录走神内容">
+                            <button id="parkAdd">记下</button>
+                          </div>
+                          <div class="park-list" id="parkList"></div>
+                        </div>
+                        <p class="focus-foot">结束后自动记账 · 退出不会丢失计时</p>
+                      </div>
+                    </section>
+
+                    <section class="screen" data-screen="review">
+                      <div class="review-head">
+                        <div>
+                          <h3>今日复盘</h3>
+                          <p>11 月 23 日 · 周日 · 60 秒对账</p>
+                        </div>
+                        <span class="streak-pill">连续 12 天</span>
+                      </div>
+
+                      <div class="score-card">
+                        <div class="score-top">
+                          <div><div class="score-label">时间兑现率</div><div class="score-big">82%</div></div>
+                          <span class="score-tag">比上周高 6%</span>
+                        </div>
+                        <div class="score-stats">
+                          <div><span>任务完成</span><b>5 / 8</b></div>
+                          <div><span>实际专注</span><b>3.1h</b></div>
+                          <div><span>偏航</span><b>1.3h</b></div>
+                        </div>
+                      </div>
+
+                      <div class="review-block">
+                        <h4>计划 VS 实际</h4>
+                        <div class="cmp-row">
+                          <div class="cmp-top"><span>深度创作</span><em>计划 4.0h · 实际 3.1h</em></div>
+                          <div class="cmp-track"><span class="cmp-plan" style="width:100%"></span><span class="cmp-actual" style="width:77%"></span></div>
+                        </div>
+                        <div class="cmp-row">
+                          <div class="cmp-top"><span>沟通交付</span><em>计划 1.25h · 实际 1.6h</em></div>
+                          <div class="cmp-track"><span class="cmp-plan" style="width:31%"></span><span class="cmp-actual" style="width:40%"></span></div>
+                        </div>
+                        <div class="cmp-row">
+                          <div class="cmp-top"><span>杂事行政</span><em>计划 1.17h · 实际 0.9h</em></div>
+                          <div class="cmp-track"><span class="cmp-plan" style="width:29%"></span><span class="cmp-actual" style="width:22%"></span></div>
+                        </div>
+                        <div class="cmp-row">
+                          <div class="cmp-top"><span>运动恢复</span><em>计划 1.0h · 实际 0.5h</em></div>
+                          <div class="cmp-track"><span class="cmp-plan" style="width:25%"></span><span class="cmp-actual" style="width:12%"></span></div>
+                        </div>
+                        <div class="cmp-legend"><span><i style="background:#e9d3c7"></i>计划</span><span><i style="background:var(--accent)"></i>实际</span></div>
+                      </div>
+
+                      <div class="review-block">
+                        <h4>为什么有偏差？</h4>
+                        <div class="reason-chips">
+                          <button class="chip accent" data-reason>客户临时改需求</button>
+                          <button class="chip accent" data-reason>低估了难度</button>
+                          <button class="chip accent" data-reason>状态不好</button>
+                          <button class="chip accent" data-reason>主动调整</button>
+                        </div>
+                      </div>
+
+                      <div class="suggest" id="suggestCard">
+                        <b>明天，把容量降到 5.0h？</b>
+                        <p>你连续 3 天高估了 1h 以上。把目标调低一点，兑现率会更好看，也更可信。</p>
+                        <button class="mini-btn" id="acceptCap">接受这个建议</button>
+                      </div>
+
+                      <div class="review-block">
+                        <h4>今天最值得保留的一件事</h4>
+                        <textarea class="note-input" placeholder="写一句就好，给明天的自己。">客户说「这版有感觉」。主视觉继续往这个方向。</textarea>
+                      </div>
+
+                      <button class="btn-block" id="finishReview">收下今天
+                        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                      </button>
+                      <p class="plan-tip" style="margin-bottom:2px">复盘会保存为一条记录，不会公开发布。</p>
+                    </section>
+
+                    <section class="screen" data-screen="collect">
+                      <div class="collect-head">
+                        <div>
+                          <h3>收集箱</h3>
+                          <p>先记下来，晚点再决定</p>
+                        </div>
+                        <span class="collect-count">14</span>
+                      </div>
+
+                      <div class="filter-row">
+                        <button class="filter-chip active" data-filter="all">全部</button>
+                        <button class="filter-chip" data-filter="create">创作</button>
+                        <button class="filter-chip" data-filter="talk">沟通</button>
+                        <button class="filter-chip" data-filter="admin">行政</button>
+                        <button class="filter-chip" data-filter="life">生活</button>
+                      </div>
+
+                      <div class="task-list">
+                        <div class="task-row" data-cat="create">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">客户 B · 分镜初稿</div><div class="task-meta"><span class="cat-dot cat-create"></span>创作<span class="energy">高精力</span></div></div>
+                          <span class="task-time">90m</span>
+                        </div>
+                        <div class="task-row" data-cat="talk">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">回复合作邀约邮件</div><div class="task-meta"><span class="cat-dot cat-talk"></span>沟通<span class="energy">低精力</span></div></div>
+                          <span class="task-time">20m</span>
+                        </div>
+                        <div class="task-row" data-cat="admin">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">开发票（11 月）</div><div class="task-meta"><span class="cat-dot cat-admin"></span>行政<span class="energy">低精力</span></div></div>
+                          <span class="task-time">15m</span>
+                        </div>
+                        <div class="task-row" data-cat="create">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">整理作品集到个人主页</div><div class="task-meta"><span class="cat-dot cat-create"></span>创作<span class="energy">中精力</span></div></div>
+                          <span class="task-time">60m</span>
+                        </div>
+                        <div class="task-row" data-cat="life">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">买新的数位笔尖</div><div class="task-meta"><span class="cat-dot cat-life"></span>生活<span class="energy">低精力</span></div></div>
+                          <span class="task-time">10m</span>
+                        </div>
+                        <div class="task-row" data-cat="talk">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">跟客户 C 确认下周三会议</div><div class="task-meta"><span class="cat-dot cat-talk"></span>沟通<span class="energy">低精力</span></div></div>
+                          <span class="task-time">10m</span>
+                        </div>
+                        <div class="task-row done" data-cat="admin">
+                          <button class="task-check" aria-label="完成"></button>
+                          <div class="task-main"><div class="task-title">续费云存储</div><div class="task-meta"><span class="cat-dot cat-admin"></span>行政<span class="energy">低精力</span></div></div>
+                          <span class="task-time">5m</span>
+                        </div>
+                      </div>
+
+                      <button class="btn-block" data-go="plan1">开始今日规划
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                      </button>
+                      <p class="plan-tip" style="margin-bottom:2px">收集箱不是待办清单，它是你的缓冲区。</p>
+                    </section>
+
+                    <section class="screen" data-screen="stats">
+                      <div class="dayline"><span>本周 · 11.17 – 11.23</span><span class="streak-pill">连续 12 天</span></div>
+                      <div class="streak-hero">
+                        <div class="streak-left"><span>连续记录</span><b>12<small>天</small></b></div>
+                        <div class="streak-right"><b>今天还没断</b>轻量日也算，补记不清零。</div>
+                      </div>
+
+                      <div class="chart-card">
+                        <div class="chart-head"><b>本周专注时间</b><span>17.8h · 比上周 +2.4h</span></div>
+                        <div class="chart">
+                          <div class="chart-col"><div class="chart-bar" style="height:42%"></div><span>一</span></div>
+                          <div class="chart-col"><div class="chart-bar" style="height:62%"></div><span>二</span></div>
+                          <div class="chart-col"><div class="chart-bar" style="height:50%"></div><span>三</span></div>
+                          <div class="chart-col"><div class="chart-bar" style="height:24%"></div><span>四</span></div>
+                          <div class="chart-col"><div class="chart-bar" style="height:70%"></div><span>五</span></div>
+                          <div class="chart-col"><div class="chart-bar" style="height:54%"></div><span>六</span></div>
+                          <div class="chart-col today"><div class="chart-bar" style="height:64%"></div><span>日</span></div>
+                        </div>
+                      </div>
+
+                      <div class="stat-tiles">
+                        <div class="stat-tile"><span>计划兑现</span><b>81<small>%</small></b></div>
+                        <div class="stat-tile"><span>创作占比</span><b>68<small>%</small></b></div>
+                        <div class="stat-tile"><span>最常超时</span><b style="font-size:14px">沟通</b></div>
+                      </div>
+
+                      <div class="chart-card">
+                        <div class="chart-head"><b>最近 14 天</b><span>3 个轻量日</span></div>
+                        <div class="mini-cal">
+                          <i class="on"></i><i class="on"></i><i class="on"></i><i class="half"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+                          <i class="on"></i><i class="on"></i><i class="half"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+                        </div>
+                        <div class="mini-cal-labels"><span>11.10</span><span>今天</span></div>
+                      </div>
+
+                      <div class="badges">
+                        <div class="badge"><b>初次留白</b>保护了 1h 缓冲</div>
+                        <div class="badge"><b>七日节奏</b>连续 7 天有记录</div>
+                        <div class="badge locked"><b>100 小时</b>再积累 18h</div>
+                      </div>
+
+                      <button class="mini-btn" style="width:100%;padding:10px" data-toast="周报生成中 · MVP 阶段先看这页">查看本周复盘</button>
+                    </section>
+
+                  </div>
+
+                  <nav class="tabbar" aria-label="主导航">
+                    <button class="tab active" data-target="today">
+                      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                      今日
+                    </button>
+                    <button class="tab" data-target="collect">
+                      <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 13h4l2 3h4l2-3h4"/></svg>
+                      收集
+                    </button>
+                    <button class="tab" data-target="review">
+                      <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>
+                      复盘
+                    </button>
+                    <button class="tab" data-target="stats">
+                      <svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+                      统计
+                    </button>
+                  </nav>
+                  <div class="toast" id="toast"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="proto-side">
+          <div class="jump-grid">
+            <button class="jump active" data-jump="today"><i>01</i>今日</button>
+            <button class="jump" data-jump="collect"><i>02</i>收集箱</button>
+            <button class="jump" data-jump="plan1"><i>03</i>清空大脑</button>
+            <button class="jump" data-jump="plan2"><i>04</i>只留三件</button>
+            <button class="jump" data-jump="plan3"><i>05</i>排进时间</button>
+            <button class="jump" data-jump="focus"><i>06</i>专注</button>
+            <button class="jump" data-jump="review"><i>07</i>复盘</button>
+            <button class="jump" data-jump="stats"><i>08</i>统计</button>
+          </div>
+
+          <div class="anno" id="anno"></div>
+
+          <div class="design-base">
+            <div class="db-head"><span>视觉与组件基线</span><span>给开发与设计对齐用</span></div>
+            <div class="db-swatches">
+              <div class="db-swatch"><i style="background:#25221d"></i><b>墨</b>#25221D</div>
+              <div class="db-swatch"><i style="background:#fbf7f0"></i><b>纸</b>#FBF7F0</div>
+              <div class="db-swatch"><i style="background:#d95b33"></i><b>陶土</b>#D95B33</div>
+              <div class="db-swatch"><i style="background:#4f6b4f"></i><b>安全</b>#4F6B4F</div>
+            </div>
+            <div class="db-list">
+              <div><b>字体：</b>标题宋体，正文系统无衬线；数字使用等宽数字特性。</div>
+              <div><b>圆角：</b>卡片 12–18，手机 47；不使用大面积纯白与高饱和渐变。</div>
+              <div><b>状态：</b>超载用陶土红，但必须同时给出具体出口；安全态用低饱和绿。</div>
+              <div><b>原型数据：</b>演示用虚构数据，不来自真实用户。</div>
+            </div>
+          </div>
+
+          <div class="proto-foot">
+            <span>原型基于 390 × 844 逻辑分辨率</span>
+            <button id="resetProto">重置演示</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="flows">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">05 / CORE FLOWS</div>
+          <h2>四个流程，覆盖一天里<br>最重要的四个时刻。</h2>
+        </div>
+        <p class="sec-lead">规划要快，执行要静，复盘要短，崩了要能救。所有流程都围绕一个原则：减少决策，不减少掌控感。</p>
+      </div>
+      <div class="flows">
+        <div class="flow">
+          <div class="flow-top"><h4>晨间 · 90 秒规划</h4><span>触发：首次打开 / 08:30 提醒</span></div>
+          <ol class="flow-steps">
+            <li>打开今日页，先看到「可用 6.0h / 已排 0h」与昨天的兑现率。</li>
+            <li>清空大脑：快速记录 5–10 条，不排序，默认时长 30 分钟。</li>
+            <li>只留三件：超过 3 件自动进入「本周稍后」，不做二次确认。</li>
+            <li>智能排一版，按精力把深度创作放进上午；接受后可单块调整。</li>
+            <li>生成今日计划，同时保留 20% 缓冲。完成时间目标 ≤ 90 秒。</li>
+          </ol>
+        </div>
+        <div class="flow">
+          <div class="flow-top"><h4>日内 · 只面对当前块</h4><span>触发：时间块开始 / 手动进入</span></div>
+          <ol class="flow-steps">
+            <li>今日页只强调当前块；其他块降低对比度，避免提前焦虑。</li>
+            <li>点播放进入专注模式，倒计时与计划时长一致，可暂停。</li>
+            <li>走神时用「走神捕手」记录想法/待办/情绪，不离开当前任务。</li>
+            <li>完成后自动记账；没完成则选择剩余时长，系统寻找最近空位。</li>
+            <li>顺延不会挤压留白；如果会，先提示「今天要牺牲留白吗」。</li>
+          </ol>
+        </div>
+        <div class="flow">
+          <div class="flow-top"><h4>晚间 · 60 秒对账</h4><span>触发：最后一个块结束 / 21:00</span></div>
+          <ol class="flow-steps">
+            <li>自动对比计划与实际，展示兑现率、完成数、实际专注时长。</li>
+            <li>点选偏航原因（最多 2 个），不做强制长文本。</li>
+            <li>系统给出明日容量建议，默认降低 0.5–1h，可一键接受。</li>
+            <li>写一句「值得保留的事」，保存后结束，不生成公开内容。</li>
+            <li>连续记录 +1；即使只完成 1 件，也保留记录。</li>
+          </ol>
+        </div>
+        <div class="flow">
+          <div class="flow-top"><h4>异常 · 计划崩了怎么办</h4><span>触发：块超时 / 临时需求</span></div>
+          <ol class="flow-steps">
+            <li>当前块显示「已超时 18 分钟」，提供「再给 15 分钟 / 记下剩余 / 放弃」。</li>
+            <li>选择剩余时长后，系统在接下来 48 小时内找最近空位。</li>
+            <li>重排结果先预览：哪些块移动、留白是否被占用、哪些进明天。</li>
+            <li>一键接受或只接受部分；被移动的块标注「因客户需求调整」。</li>
+            <li>不扣连续记录，不出现「失败」「懒惰」等评价性文案。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="spec">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">06 / REQUIREMENTS</div>
+          <h2>MVP 只做七件事，<br>每件都要能闭环。</h2>
+        </div>
+        <p class="sec-lead">MVP 聚焦七个模块：收集、容量、三件事、时间轴（含重排）、排程建议、专注、复盘；账号与数据合规作为底座。P1 是验证留存后的增强，P2 是规模化与商业化探索。</p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="req-table">
+          <thead><tr><th style="width:90px">模块</th><th style="width:150px">需求</th><th style="width:60px">优先级</th><th>验收标准</th></tr></thead>
+          <tbody>
+            <tr><td>账号</td><td>微信登录 / 游客模式</td><td><span class="prio p0">P0</span></td><td>首次进入 10 秒内可开始记录；游客数据本地保留，绑定手机号后合并。</td></tr>
+            <tr><td>收集箱</td><td>快速记录 + 预估时长</td><td><span class="prio p0">P0</span></td><td>3 秒内记一条；默认 30 分钟；支持创作/沟通/行政/生活四类与精力标签。</td></tr>
+            <tr><td>今日</td><td>今日三件事</td><td><span class="prio p0">P0</span></td><td>上限 3 件；第 4 件自动进入「本周稍后」并提示；可替换不可无限添加。</td></tr>
+            <tr><td>容量</td><td>容量模型与超载提示</td><td><span class="prio p0">P0</span></td><td>容量 = 可用时间 − 固定事项 − 20% 缓冲；超载时必须显示超出量与至少一个可执行出口。</td></tr>
+            <tr><td>时间轴</td><td>手动排块 / 点选时段</td><td><span class="prio p0">P0</span></td><td>15 分钟粒度；冲突时提示挤开或改期；小程序优先「点选时段」而非长按拖拽。</td></tr>
+            <tr><td>规划</td><td>智能排程建议</td><td><span class="prio p0">P0</span></td><td>按精力与截止时间给出一版建议；可整体接受、单块替换；不自动修改已确认的块。</td></tr>
+            <tr><td>专注</td><td>单块专注模式</td><td><span class="prio p0">P0</span></td><td>打开 3 秒内可开始当前任务；后台可恢复；退出不丢失计时；支持暂停与部分完成。</td></tr>
+            <tr><td>重排</td><td>顺延 / 移出 / 拆分</td><td><span class="prio p0">P0</span></td><td>任何失败都能在 2 步内重排；重排前预览留白占用；不产生惩罚性文案。</td></tr>
+            <tr><td>复盘</td><td>日终对账 + 归因</td><td><span class="prio p0">P0</span></td><td>60 秒内可完成；归因最多选 2 个；可跳过；记录计划/实际/原因/一句备注。</td></tr>
+            <tr><td>复盘</td><td>明日容量建议</td><td><span class="prio p1">P1</span></td><td>基于最近 7 天兑现率，建议下调 0.5–1h；接受后写入明日容量，可手动改回。</td></tr>
+            <tr><td>专注</td><td>走神捕手</td><td><span class="prio p1">P1</span></td><td>记录不打断计时；内容进入「稍后处理」；结束后可一键转为任务或丢弃。</td></tr>
+            <tr><td>统计</td><td>连续记录与轻量日</td><td><span class="prio p1">P1</span></td><td>中断不清零历史；每日完成 ≥1 个块或完成复盘即算记录；支持补记。</td></tr>
+            <tr><td>统计</td><td>周报与超时类型</td><td><span class="prio p1">P1</span></td><td>只展示创作小时、兑现率、超时类型三个可行动指标；不做无意义排行榜。</td></tr>
+            <tr><td>提醒</td><td>微信订阅消息</td><td><span class="prio p1">P1</span></td><td>规划、块开始、复盘三类；默认每日不超过 3 条；用户可逐类关闭。</td></tr>
+            <tr><td>模板</td><td>重复日 / 模板</td><td><span class="prio p2">P2</span></td><td>支持「典型创作日」模板；应用前预览容量；不覆盖已有块。</td></tr>
+            <tr><td>集成</td><td>日历导入</td><td><span class="prio p2">P2</span></td><td>只读导入固定事项；小程序生态下优先系统日历授权；失败可手动录入。</td></tr>
+            <tr><td>数据</td><td>导出与账号删除</td><td><span class="prio p0">P0</span></td><td>支持导出 CSV / Markdown；删除账号 7 天内可撤回；符合微信隐私规范。</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="data-grid">
+        <pre class="code-block"><span class="t">Task</span> {
+  id, title, estimateMin,
+  energy: high | mid | low,
+  category: create | talk | admin | life,
+  status: inbox | planned | active | done | partial | moved,
+  source, createdAt
+}
+
+<span class="t">Block</span> {
+  id, taskId, date, start, end,
+  kind: task | buffer | rest | ritual,
+  locked, movedFrom
+}
+
+<span class="t">DayPlan</span> {
+  date, capacityMin, bufferRatio,
+  mits[3], blocks[],
+  plannedMin, actualMin, fulfillment
+}
+
+<span class="t">Review</span> {
+  date, plannedMin, actualMin, completion,
+  reasons[], note, tomorrowCapacity, accepted
+}</pre>
+        <div class="rules-card">
+          <h4>关键规则</h4>
+          <ul>
+            <li><b>容量公式：</b>可用分钟 − 固定事项 − 20% 缓冲；缓冲可下调，但建议不低于 10%。</li>
+            <li><b>状态机：</b>inbox → planned → active → done / partial / moved；任何状态都能回到 inbox，不产生不可逆操作。</li>
+            <li><b>重排约束：</b>不覆盖 locked 块；不主动占用留白；跨天移动必须预览并由用户确认。</li>
+            <li><b>记账口径：</b>实际时长取「计时器记录」与「用户确认」的较大值，避免漏记；部分完成保留剩余分钟。</li>
+            <li><b>留白保护：</b>buffer / rest 块不参与智能排程占用；任何占用都必须由用户显式确认。</li>
+            <li><b>数据同步：</b>本地优先、云端合并，按 updatedAt 解决冲突；离线可记录，联网后补同步。</li>
+            <li><b>多端预留：</b>Block 使用绝对日期与分钟，避免时区与跨天歧义；为 P2 日历同步预留 externalId。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sec-head" id="metrics" style="margin-top:46px;margin-bottom:20px">
+        <div>
+          <div class="sec-kicker">METRICS &amp; TRACKING</div>
+          <h2 style="font-size:clamp(24px,2.8vw,32px)">只度量能改变行为的数字。</h2>
+        </div>
+        <p class="sec-lead">北极星同时约束规划、现实性与执行；埋点只采集产品决策需要的数据，不做用户画像外扩。</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="northstar">
+          <span>NORTH STAR</span>
+          <b>每周每位活跃用户完成的「有计划的深度时间块」分钟数。</b>
+          <p>它同时约束了三件事：用户还在规划、计划是现实的、执行真的发生了。只统计开始前被排入时间轴、结束后被确认完成的深度创作块。</p>
+        </div>
+        <div class="funnel">
+          <h4>MVP 漏斗假设</h4>
+          <div class="funnel-row"><span>打开 → 规划</span><div class="funnel-track"><i style="width:82%"></i></div><b>≥55%</b></div>
+          <div class="funnel-row"><span>规划 → 首块</span><div class="funnel-track"><i style="width:88%"></i></div><b>≥70%</b></div>
+          <div class="funnel-row"><span>首块 → 完成</span><div class="funnel-track"><i style="width:74%"></i></div><b>≥65%</b></div>
+          <div class="funnel-row"><span>当日 → 复盘</span><div class="funnel-track"><i style="width:52%"></i></div><b>≥35%</b></div>
+          <div class="funnel-row"><span>次日回访</span><div class="funnel-track"><i style="width:45%"></i></div><b>≥40%</b></div>
+          <div class="funnel-row"><span>7 日留存</span><div class="funnel-track"><i style="width:28%"></i></div><b>≥25%</b></div>
+          <p class="note" style="margin-top:10px">以上为上线前假设，需用 30 人内测校准；不达标先改流程，不加功能。</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:190px">事件</th><th style="width:220px">触发时机</th><th>关键参数</th></tr></thead>
+          <tbody>
+            <tr><td>app_open</td><td>小程序进入前台</td><td>source, is_first_open, local_hour</td></tr>
+            <tr><td>plan_start</td><td>进入晨间规划 Step 1</td><td>entry（今日/收集/提醒）, planned_before</td></tr>
+            <tr><td>plan_dump_add</td><td>清空大脑新增一条</td><td>method（输入/快捷/语音）, estimate_min</td></tr>
+            <tr><td>plan_mits_confirm</td><td>确认今日三件事</td><td>count, replaced_count, later_count</td></tr>
+            <tr><td>plan_schedule_accept</td><td>接受智能排程 / 完成规划</td><td>planned_min, capacity_min, buffer_min, edited_blocks</td></tr>
+            <tr><td>block_start</td><td>开始一个时间块</td><td>block_id, task_category, planned_min, energy</td></tr>
+            <tr><td>focus_start</td><td>进入专注模式</td><td>block_id, entry（自动/手动）</td></tr>
+            <tr><td>distraction_add</td><td>走神捕手记录</td><td>type（想法/待办/情绪）, elapsed_min</td></tr>
+            <tr><td>block_complete</td><td>完成 / 部分完成块</td><td>planned_min, actual_min, completion_type</td></tr>
+            <tr><td>block_reschedule</td><td>顺延 / 移出 / 拆分</td><td>reason, delay_min, buffer_used, moved_to</td></tr>
+            <tr><td>review_open</td><td>打开复盘页</td><td>entry（自动/手动）, on_time</td></tr>
+            <tr><td>review_reason_select</td><td>选择偏航原因</td><td>reason_ids, count</td></tr>
+            <tr><td>review_submit</td><td>提交复盘</td><td>fulfillment_rate, actual_min, tomorrow_capacity, accepted_suggestion</td></tr>
+            <tr><td>streak_extend</td><td>连续记录 +1</td><td>days, is_light_day, is_backfilled</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">07 / ROADMAP & RISKS</div>
+          <h2>先用 6 周验证一件事：<br>用户愿不愿意被容量约束。</h2>
+        </div>
+        <p class="sec-lead">最大风险不是做不出功能，而是用户觉得「预估时长」太麻烦。所以第一阶段必须验证这件事，再谈智能与增长。</p>
+      </div>
+
+      <div class="roadmap">
+        <div class="phase now">
+          <span>W1–2 · 验证</span>
+          <h4>日记研究 + 纸原型</h4>
+          <p>找 5 位自由职业者，记录一周真实计划与实际；验证容量、三件事、归因标签是否被理解。</p>
+        </div>
+        <div class="phase">
+          <span>W3–6 · MVP</span>
+          <h4>七件事闭环</h4>
+          <p>收集箱、容量、三件事、时间轴、专注、重排、日终复盘。微信小程序单端，先不做日历导入。</p>
+        </div>
+        <div class="phase">
+          <span>W7–10 · 内测</span>
+          <h4>30 人 + 数据校准</h4>
+          <p>看规划完成率、计划兑现率、次日回访；每周迭代文案与默认值，不新增功能。</p>
+        </div>
+        <div class="phase">
+          <span>P1 · 增强</span>
+          <h4>建议与节奏</h4>
+          <p>明日容量建议、走神捕手、连续记录、周报、订阅提醒、模板日。验证付费意愿。</p>
+        </div>
+      </div>
+
+      <div class="risk-grid">
+        <div class="risk-box">
+          <h4>主要风险与应对</h4>
+          <ul>
+            <li><b>用户不愿预估时长。</b> 默认时长 + 历史学习 + 只要求「短/中/长」三档，首次不强迫精确。</li>
+            <li><b>容量模型被感知为说教。</b> 文案只描述事实与出口，不评价自律；留白始终可见且可保护。</li>
+            <li><b>小程序时间轴操作摩擦。</b> 首选点选时段与智能建议；拖拽仅作为增强，不设为唯一路径。</li>
+            <li><b>提醒造成压力。</b> 默认每日 ≤3 条，允许「今天不提醒」；不做连续打卡惩罚。</li>
+            <li><b>数据隐私顾虑。</b> 复盘默认私密；不读取聊天内容；导出与删除入口前置。</li>
+          </ul>
+        </div>
+        <div class="risk-box">
+          <h4>待确认的开放问题</h4>
+          <ol>
+            <li>MVP 是否直接用「点选时段」替代长按拖拽，降低开发与学习成本？</li>
+            <li>日历导入是否进 P0？微信生态内固定事项可能先靠手动录入。</li>
+            <li>免费与订阅的边界：容量、规划、复盘免费；智能排程与周报订阅？</li>
+            <li>是否做微信状态 / 小组件，让「当前块」在 App 外也能被看见？</li>
+            <li>连续记录是否允许无限补记？补记太多会让激励失真。</li>
+          </ol>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:18px">下一步建议：先约 5 位目标用户做一周日记研究；用这份原型做 30 分钟走查，重点观察他们是否理解「容量」与「留白」；再决定 MVP 是否保留智能排程。</p>
+    </section>
+
+    <footer>
+      <div><b>日刻 Daymark · 日内规划小程序 PRD v0.1</b><br>竞品信息整理于 2026-11；原型与文案可随用户测试迭代。</div>
+      <div>为自由职业者与创作者设计<br>先算容量，再排时间块，晚上对账。</div>
+    </footer>
+  </div>
+</main>
+
+<script>
+const SCREENS = {
+  today: {
+    num: '01',
+    title: '今日 · 时间块总览',
+    goal: '打开 3 秒内回答两个问题：现在该做什么？今天到底排不排得下？',
+    sections: [
+      { h: '关键交互', items: [
+        '容量条同时表达「已排 / 可用 / 超出」，超载时给出可执行出口，而不是只把数字变红。',
+        '今日三件事固定在时间轴上方；当前块用强调色与播放键，其余块主动降噪。',
+        '「移出 2 项」直接卸掉低优先级块，容量条即时回到安全区，留白保持不动。',
+        '点当前块的播放键进入专注；点「重新规划」回到三步流程。'
+      ]},
+      { h: '状态与边界', items: [
+        '空态：只保留「开始今天的规划」与收集箱入口，不展示空时间轴。',
+        '超载：说明超出多少、为什么、建议移出几项，并允许用户什么都不改。',
+        '已完成：块变灰并记录实际时长，不消失，作为晚间复盘的输入。'
+      ]}
+    ]
+  },
+  collect: {
+    num: '02',
+    title: '收集箱 · 先接住，再决定',
+    goal: '把「记下来」和「排进去」拆开，降低开始规划的心理成本。',
+    sections: [
+      { h: '关键交互', items: [
+        '分类筛选只用于压缩列表，不强制用户在记录时就做完整分类。',
+        '每条任务带预估时长与精力标签；没有预估时默认 30 分钟。',
+        '勾选完成会保留记录，不立即删除，方便晚间统计与回顾。',
+        '底部固定「开始今日规划」，把收集箱自然导入晨间流程。'
+      ]},
+      { h: '设计说明', items: [
+        '收集箱的定位是缓冲区，不是第二个待办清单；文案明确「先记下来，晚点再决定」。',
+        '数量用衬线大字呈现，给用户「我有存货」的确定感，而不是焦虑。',
+        '后续版本支持语音与微信转发录入，MVP 先保证手动输入足够快。'
+      ]}
+    ]
+  },
+  plan1: {
+    num: '03',
+    title: '规划 Step 1 · 清空大脑',
+    goal: '90 秒内把占脑子的东西全部倒出来，不排序、不判断、不要求准确。',
+    sections: [
+      { h: '关键交互', items: [
+        '输入框始终置顶，回车即添加；快捷 chip 提供常见事项，降低空白页阻力。',
+        '新增条目默认 30 分钟，可稍后修改；时长不做强制校验。',
+        '列表只呈现，不提供优先级排序，避免在第一步就陷入决策。',
+        '「下一步」不要求清空所有条目，允许保留未处理内容。'
+      ]},
+      { h: '文案原则', items: [
+        '不出现「你今天必须完成」；使用「先倒出来」「不评判你」。',
+        '不显示条数压力；超过 10 条也不提示「太多了」。',
+        '如果用户退出，自动保存草稿，并询问是否下次继续。'
+      ]}
+    ]
+  },
+  plan2: {
+    num: '04',
+    title: '规划 Step 2 · 只留三件',
+    goal: '用上限制造取舍，让用户主动放弃「全都要」，而不是晚上被动失败。',
+    sections: [
+      { h: '关键交互', items: [
+        '默认勾选 3 件，第四件点击时提示「今天只留三件」，不直接静默失败。',
+        '其余任务进入「本周稍后」，明确告知不会丢失，降低放弃痛感。',
+        '每件任务显示类别、时长、精力需求，帮助判断是否放得进今天。',
+        '允许替换，不允许无限添加；三件是上限也是保护。'
+      ]},
+      { h: '设计说明', items: [
+        '「三件」是可解释的约束，比「重要性矩阵」更快，适合手机上的 90 秒仪式。',
+        '不要求填写优先级分数；顺序即优先级，第一件默认放到高精力时段。',
+        'P1 将基于历史完成率推荐第三件，MVP 先不做智能推荐。'
+      ]}
+    ]
+  },
+  plan3: {
+    num: '05',
+    title: '规划 Step 3 · 排进时间',
+    goal: '让容量与精力同时可见；先接受一版建议，再微调，而不是从空白时间轴开始。',
+    sections: [
+      { h: '关键交互', items: [
+        '容量条先扣掉 20% 缓冲，再显示已排时长；「留白」始终是一个可见结果。',
+        '智能排程给出一版完整建议，可整体接受，也可逐块替换；不偷偷改动已确认块。',
+        '建议顺序：高精力时段放深度创作，低精力时段放沟通与行政。',
+        '完成规划后生成今日时间轴，并提示「之后可随时重新规划」。'
+      ]},
+      { h: '边界', items: [
+        '若三件事本身就超出容量，先提示取舍，不允许直接生成超载计划。',
+        '智能排程失败时退回手动点选，不用错误弹窗阻断流程。',
+        '用户手动改过的块标记为锁定，后续建议不得覆盖。'
+      ]}
+    ]
+  },
+  focus: {
+    num: '06',
+    title: '专注 · 只做眼前这一块',
+    goal: '把「开始」的阻力降到最低，把「走神」变成可记录的事件，而不是失败。',
+    sections: [
+      { h: '关键交互', items: [
+        '倒计时与计划时长一致；暂停不丢失计时，退出后台可恢复。',
+        '走神捕手支持想法/待办/情绪快捷记录，不打断计时，也不要求立即处理。',
+        '完成本段自动记账；部分完成时选择实际时长，剩余部分进入重排建议。',
+        '界面只保留任务、时间、记录入口，不展示其他块的进度。'
+      ]},
+      { h: '设计说明', items: [
+        '深色全屏与主 App 形成明确切换，帮助用户建立「进入专注」的条件反射。',
+        '不做强制锁机与惩罚；专注是支持，不是监工。',
+        '「不计入中断」是刻意的文案选择：记录走神不等于承认失败。'
+      ]}
+    ]
+  },
+  review: {
+    num: '07',
+    title: '复盘 · 60 秒完成对账',
+    goal: '让用户知道「为什么偏了、明天怎么改」，而不是看一张更漂亮的报表。',
+    sections: [
+      { h: '关键交互', items: [
+        '首屏先给结论：兑现率、完成数、实际专注、偏航时长，四个数字足够。',
+        '计划 vs 实际按类别对比，只显示差异最大的四类，避免信息过载。',
+        '归因标签最多选两个；可跳过，不强制写长文。',
+        '明日容量建议默认下调 0.5–1h，一次点击接受，可手动改回。'
+      ]},
+      { h: '状态与边界', items: [
+        '低完成日不出现负面评价；文案聚焦「明天的计划更准一点」。',
+        '未完成的任务不自动消失，进入「本周稍后」并保留原预估。',
+        '复盘记录默认私密；分享卡片只包含用户主动选择的内容。'
+      ]}
+    ]
+  },
+  stats: {
+    num: '08',
+    title: '统计 · 用节奏代替打卡',
+    goal: '让坚持变得可持续：允许轻量日、允许补记、只展示能改变行为的数字。',
+    sections: [
+      { h: '关键交互', items: [
+        '连续记录以「有记录」为准，完成 1 个块或完成复盘都算，不要求满勤。',
+        '本周专注时间与上周对比；今天用强调色标出，不制造攀比。',
+        '「最常超时」直接指向可行动结论，例如把沟通集中到下午。',
+        '勋章只做温和纪念，不做稀缺性排名与社交炫耀。'
+      ]},
+      { h: '指标定义', items: [
+        '创作小时 = 深度创作类时间块的实际完成分钟数。',
+        '计划兑现率 = 实际完成分钟 / 计划分钟，按周汇总。',
+        '轻量日 = 当日完成至少 1 个块或完成复盘，但总专注 < 2h。'
+      ]}
+    ]
+  }
+};
+
+const phone = document.getElementById('phone');
+const appBody = document.getElementById('appBody');
+const anno = document.getElementById('anno');
+const screens = document.querySelectorAll('.screen');
+const tabs = document.querySelectorAll('.tab');
+const jumps = document.querySelectorAll('.jump');
+const tabScreens = ['today', 'collect', 'review', 'stats'];
+let currentScreen = 'today';
+
+function showScreen(id) {
+  if (!SCREENS[id]) return;
+  currentScreen = id;
+  screens.forEach(function (s) {
+    s.classList.toggle('active', s.dataset.screen === id);
+  });
+  tabs.forEach(function (t) {
+    t.classList.toggle('active', t.dataset.target === id);
+  });
+  jumps.forEach(function (j) {
+    j.classList.toggle('active', j.dataset.jump === id);
+  });
+  phone.classList.toggle('is-immersive', tabScreens.indexOf(id) === -1);
+  appBody.scrollTop = 0;
+  document.getElementById('toast').classList.remove('show');
+  renderAnno(id);
+  focusVisible = id === 'focus';
+}
+
+function renderAnno(id) {
+  const d = SCREENS[id];
+  let html = '<div class="anno-kicker">SCREEN ' + d.num + '</div>';
+  html += '<h3>' + d.title + '</h3>';
+  html += '<p class="anno-goal">' + d.goal + '</p>';
+  d.sections.forEach(function (sec) {
+    html += '<div class="anno-sec"><h4>' + sec.h + '</h4><ul>';
+    sec.items.forEach(function (item) {
+      html += '<li>' + item + '</li>';
+    });
+    html += '</ul></div>';
+  });
+  anno.innerHTML = html;
+}
+
+document.querySelectorAll('[data-go]').forEach(function (el) {
+  el.addEventListener('click', function () {
+    showScreen(el.dataset.go);
+  });
+});
+
+tabs.forEach(function (t) {
+  t.addEventListener('click', function () {
+    showScreen(t.dataset.target);
+  });
+});
+
+jumps.forEach(function (j) {
+  j.addEventListener('click', function () {
+    showScreen(j.dataset.jump);
+  });
+});
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () {
+    t.classList.remove('show');
+  }, 2200);
+}
+
+document.querySelectorAll('[data-toast]').forEach(function (el) {
+  el.addEventListener('click', function () {
+    showToast(el.dataset.toast);
+  });
+});
+
+const dumpInput = document.getElementById('dumpInput');
+const dumpList = document.getElementById('dumpList');
+function addDump(text) {
+  const value = (text || '').trim();
+  if (!value) {
+    showToast('先写一句，再添加');
+    return false;
+  }
+  const item = document.createElement('div');
+  item.className = 'dump-item';
+  const span = document.createElement('span');
+  span.textContent = value;
+  const em = document.createElement('em');
+  em.textContent = '30m';
+  item.appendChild(span);
+  item.appendChild(em);
+  dumpList.appendChild(item);
+  return true;
+}
+document.getElementById('dumpAdd').addEventListener('click', function () {
+  if (addDump(dumpInput.value)) {
+    dumpInput.value = '';
+    showToast('已放进收集箱');
+  }
+});
+dumpInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (addDump(dumpInput.value)) {
+      dumpInput.value = '';
+      showToast('已放进收集箱');
+    }
+  }
+});
+document.querySelectorAll('[data-dump]').forEach(function (chip) {
+  chip.addEventListener('click', function () {
+    addDump(chip.textContent.replace(/\s*\d+m$/, ''));
+    showToast('已添加，时长稍后可改');
+  });
+});
+
+let selectedPicks = 3;
+document.querySelectorAll('[data-pick]').forEach(function (row) {
+  row.addEventListener('click', function () {
+    if (row.classList.contains('sel')) {
+      row.classList.remove('sel');
+      selectedPicks = Math.max(0, selectedPicks - 1);
+    } else {
+      if (selectedPicks >= 3) {
+        showToast('今天只留三件，其余的交给本周稍后');
+        return;
+      }
+      row.classList.add('sel');
+      selectedPicks += 1;
+    }
+    document.getElementById('laterCount').textContent = String(5 - selectedPicks);
+    const ranks = ['第 1 件', '第 2 件', '第 3 件', '第 4 件', '第 5 件'];
+    document.querySelectorAll('[data-pick]').forEach(function (r, i) {
+      r.querySelector('.pick-rank').textContent = ranks[i];
+    });
+  });
+});
+
+let planScheduled = false;
+const smartEmpty = document.getElementById('smartEmpty');
+const schedPreview = document.getElementById('schedPreview');
+const smartBtn = document.getElementById('smartBtn');
+const p3Planned = document.getElementById('p3Planned');
+const p3Bar = document.getElementById('p3Bar');
+const p3Buffer = document.getElementById('p3Buffer');
+function schedulePlan() {
+  planScheduled = true;
+  smartEmpty.style.display = 'none';
+  schedPreview.classList.add('show');
+  p3Planned.textContent = '已排 4.75h';
+  p3Bar.style.width = '79%';
+  p3Bar.style.background = 'var(--green)';
+  p3Buffer.textContent = '留白 1.25h';
+  showToast('已按精力排好，留白 1.25h 被保留');
+}
+smartBtn.addEventListener('click', schedulePlan);
+document.getElementById('resmartBtn').addEventListener('click', schedulePlan);
+document.getElementById('finishPlan').addEventListener('click', function () {
+  const msg = planScheduled ? '今日计划已生成 · 留白 1.25h' : '已生成草稿，记得补上时间块';
+  showScreen('today');
+  showToast(msg);
+});
+
+document.getElementById('trimBtn').addEventListener('click', function () {
+  document.querySelectorAll('[data-optional]').forEach(function (block) {
+    block.classList.add('removed');
+  });
+  const fill = document.getElementById('capFill');
+  const over = document.getElementById('capOver');
+  const warn = document.getElementById('capWarn');
+  const lead = document.getElementById('capLead');
+  const sub = document.getElementById('capSub');
+  const note = document.getElementById('capNote');
+  fill.style.width = '95%';
+  fill.classList.add('safe');
+  over.style.display = 'none';
+  warn.textContent = '在容量内';
+  warn.classList.add('safe');
+  lead.textContent = '6.0h 可用';
+  sub.textContent = '已排 5.7h · 留白 3h 未动';
+  note.classList.add('safe');
+  note.textContent = '已移出「课程脚本」与「回消息 / 开发票」到明天。今天轻了一点，留白还在。';
+  this.disabled = true;
+  this.textContent = '已调整';
+  showToast('已移出 2 项，容量回到安全区');
+});
+
+let remaining = 42 * 60 + 18;
+let paused = false;
+let focusVisible = false;
+const focusTime = document.getElementById('focusTime');
+const focusRing = document.getElementById('focusRing');
+const pauseBtn = document.getElementById('pauseBtn');
+function fmt(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+setInterval(function () {
+  if (!focusVisible || paused || remaining <= 0) return;
+  remaining -= 1;
+  focusTime.textContent = fmt(remaining);
+  const p = Math.min(100, Math.max(0, ((90 * 60 - remaining) / (90 * 60)) * 100));
+  focusRing.style.setProperty('--p', p.toFixed(1));
+}, 1000);
+pauseBtn.addEventListener('click', function () {
+  paused = !paused;
+  pauseBtn.innerHTML = paused
+    ? '<svg viewBox="0 0 12 12"><path d="M2 1l9 5-9 5z"/></svg> 继续'
+    : '<svg viewBox="0 0 12 12"><rect x="1" y="0" width="3" height="12" rx="1"/><rect x="8" y="0" width="3" height="12" rx="1"/></svg> 暂停';
+  showToast(paused ? '已暂停 · 计时保留' : '继续专注');
+});
+document.getElementById('finishFocus').addEventListener('click', function () {
+  showScreen('today');
+  showToast('本段已完成 · 记账 48 分钟');
+});
+
+const parkInput = document.getElementById('parkInput');
+const parkList = document.getElementById('parkList');
+function addPark(text) {
+  const value = (text || '').trim();
+  if (!value) return;
+  const span = document.createElement('span');
+  span.textContent = value;
+  parkList.appendChild(span);
+  showToast('已放在稍后处理，继续这一块');
+}
+document.getElementById('parkAdd').addEventListener('click', function () {
+  addPark(parkInput.value);
+  parkInput.value = '';
+});
+parkInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addPark(parkInput.value);
+    parkInput.value = '';
+  }
+});
+document.querySelectorAll('[data-park]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    addPark(btn.dataset.park + '：记一笔');
+  });
+});
+
+document.querySelectorAll('[data-reason]').forEach(function (chip) {
+  chip.addEventListener('click', function () {
+    chip.classList.toggle('active');
+  });
+});
+let capacityAccepted = false;
+document.getElementById('acceptCap').addEventListener('click', function () {
+  capacityAccepted = true;
+  const card = document.getElementById('suggestCard');
+  card.classList.add('accepted');
+  card.querySelector('b').textContent = '明天容量已改为 5.0h';
+  card.querySelector('p').textContent = '已写入明日计划。你可以随时在设置里改回来。';
+  this.disabled = true;
+  this.textContent = '已接受';
+  showToast('明天容量已下调到 5.0h');
+});
+document.getElementById('finishReview').addEventListener('click', function () {
+  showScreen('stats');
+  showToast(capacityAccepted ? '已收下今天 · 明天容量 5.0h' : '已收下今天 · 明天仍按 6.0h 开始');
+});
+
+document.querySelectorAll('.task-check').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    btn.closest('.task-row').classList.toggle('done');
+  });
+});
+document.querySelectorAll('[data-filter]').forEach(function (chip) {
+  chip.addEventListener('click', function () {
+    document.querySelectorAll('[data-filter]').forEach(function (c) {
+      c.classList.toggle('active', c === chip);
+    });
+    const filter = chip.dataset.filter;
+    document.querySelectorAll('.task-row').forEach(function (row) {
+      row.style.display = (filter === 'all' || row.dataset.cat === filter) ? '' : 'none';
+    });
+  });
+});
+
+document.querySelectorAll('.mit-check').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    const mit = btn.closest('.mit');
+    mit.classList.toggle('done');
+    const count = document.querySelectorAll('.mit.done').length;
+    document.getElementById('mitCount').textContent = count + ' / 3 完成';
+    showToast(mit.classList.contains('done') ? '已记下完成，晚上会自动出现在复盘里' : '已恢复到进行中');
+  });
+});
+
+document.getElementById('resetProto').addEventListener('click', function () {
+  location.reload();
+});
+
+renderAnno('today');
+</script>
+</body>
+</html>
